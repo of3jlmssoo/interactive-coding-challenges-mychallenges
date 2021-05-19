@@ -1,5 +1,6 @@
 import unittest
 
+
 class TestUniqueChars(unittest.TestCase):
 
     def test_unique_chars(self, func):
@@ -42,14 +43,7 @@ def main():
         # in the solutions file
         pass
 
-# from typing import TypeVar, Union
-
-# T = TypeVar('T', True, False)
-
 class UniqueCharsSet():
-    
-    # def __init__(self) -> None:    # except NameError:
-    #     pass
     
     def has_unique_chars(self, string: str) -> bool:
         if string == None: return False
@@ -57,9 +51,6 @@ class UniqueCharsSet():
 
 
 class UniqueChars():
-
-    # def __init__(self) -> None:
-    #     pass
     
     def has_unique_chars(self, string: str) -> bool:
         self.__word = []
@@ -73,10 +64,6 @@ class UniqueChars():
 
 
 class UniqueCharsInPlace():
-    
-    # def __init__(self) -> None:
-    #     pass
-        
 
     def has_unique_chars(self, string: str) -> bool:
         if string == None: return False
