@@ -59,7 +59,7 @@ class Solution():
         TestCases:
             None input -> TypeError
             [] -> ValueError
-            [1, 3, 2, -7, 5], 7 -> [2, 4]
+            [1, 3, 2, -7, 5], 7 -> [2, 4] 
         """
         if nums == None or target == None:
             raise TypeError('TypeError : None specified in nums or target')
@@ -68,11 +68,6 @@ class Solution():
         for i, num  in enumerate(nums):
             if (num2 := target - num) in nums:
                 return [i,nums.index(num2)]       
-    
-
-
-
-
 
 if __name__ == '__main__':
     main()
