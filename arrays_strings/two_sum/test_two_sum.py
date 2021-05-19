@@ -42,12 +42,13 @@ class MyTest(unittest.TestCase):
         print(f'end of MyTest')
 
 class Solution():
-
+    
     def two_sum(self, nums: list, target: int) -> list:
-        """two_sum find two indicesなので、足してtargetになる2つの値の組合せを探し、その値のインデックスを返す。
+        """two_sum find two indicesなので、足してtargetになる2つの値の組合せを探し、
+        その値のインデックスを返す。
         3つ以上の組合せは考慮しなくて良い。
         また、Is there exactly one solution? Yesなので1つ組合せが見つかったら終えて良い
-
+        
         Args:
             nums   (list): 探索対象のリスト
             target (int) : 合計してこの値になる
@@ -67,6 +68,8 @@ class Solution():
         for i, num  in enumerate(nums):
             if (num2 := target - num) in nums:
                 return [i,nums.index(num2)]       
+    
+
 
 
 
