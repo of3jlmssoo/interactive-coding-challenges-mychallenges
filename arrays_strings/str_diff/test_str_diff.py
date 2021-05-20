@@ -10,10 +10,10 @@ class TestFindDiff(unittest.TestCase):
         self.assertEqual(solution.find_diff('aab', 'ab'), 'a')
         self.assertEqual(solution.find_diff('abcd', 'abcde'), 'e')
         self.assertEqual(solution.find_diff('aaabbcdd', 'abdbacade'), 'e')
-        # self.assertEqual(solution.find_diff_xor('ab', 'aab'), 'a')
-        # self.assertEqual(solution.find_diff_xor('aab', 'ab'), 'a')
-        # self.assertEqual(solution.find_diff_xor('abcd', 'abcde'), 'e')
-        # self.assertEqual(solution.find_diff_xor('aaabbcdd', 'abdbacade'), 'e')
+        self.assertEqual(solution.find_diff_xor('ab', 'aab'), 'a')
+        self.assertEqual(solution.find_diff_xor('aab', 'ab'), 'a')
+        self.assertEqual(solution.find_diff_xor('abcd', 'abcde'), 'e')
+        self.assertEqual(solution.find_diff_xor('aaabbcdd', 'abdbacade'), 'e')
         print('Success: test_find_diff')
 
 
@@ -24,7 +24,7 @@ class MyTest(unittest.TestCase):
         solution = Solution()
         self.assertRaises(TypeError, solution.find_diff, None, None)
         self.assertEqual(solution.find_diff('ab', 'aab'), 'a')
-        # self.assertRaises(ValueError, solution.two_sum, [], 0)
+        self.assertEqual(solution.find_diff_xor('ab', 'aab'), 'a')
         print(f'end of MyTest')
 
     
@@ -40,7 +40,6 @@ class Solution():
 
 
     """
-
     def find_diff(self, str1: str, str2: str) -> str:
         """find_diff 違いは一文字に限定されている。str1が長いケースも短いケースもある。ただし長さの差は必ず１になる(べき)。
 
@@ -61,17 +60,10 @@ class Solution():
         if str1 == None or str2 == None:
             raise TypeError('TypeError : None specified in str1 or str2')
 
-        str1 = [char for char in str1]
-        str2 = [char for char in str2]
+        str1 = self.str2list(str1)
+        str2 = self.str2list(str2)
         
-        if len(str1) > len(str2):
-            short_str = str2
-            long_str = str1 
-        elif len(str1) < len(str2):
-            short_str = str1
-            long_str = str2 
-        else:
-            print("len(str1) == len(str2)")
+        short_str, long_str = self.set_short_long(str1, str2)
 
         for c in short_str:
             try:
@@ -83,6 +75,83 @@ class Solution():
 
         return long_str[0]
 
+    def find_diff_xor(self, str1: str, str2: str) -> str:
+        """find_diff_xor ギブアップ。solutionを参考にする。
+        === str1 === char:a, ord(char):97, result:97, bin(ord(char):0b1100001,  bin(result):0b1100001
+        === str1 === char:b, ord(char):98, result:3,  bin(ord(char):0b1100010,  bin(result):0b11
+        === between str1 and str2 === result:3, bin(result):0b11
+        === str2 === char:a, ord(char):97, result:98, bin(ord(char):0b1100001,  bin(result):0b1100010
+        === str2 === char:a, ord(char):97, result:3,  bin(ord(char):0b1100001,  bin(result):0b11
+        === str2 === char:b, ord(char):98, result:97, bin(ord(char):0b1100010,  bin(result):0b1100001
+        === before return === result:97, chr(result):a
+        a
+        =============================
+        === str1 === char:a, ord(char):97, result:97, bin(ord(char):0b1100001,  bin(result):0b1100001
+        === str1 === char:a, ord(char):97, result:0,  bin(ord(char):0b1100001,  bin(result):0b0
+        === str1 === char:b, ord(char):98, result:98, bin(ord(char):0b1100010,  bin(result):0b1100010
+        === between str1 and str2 === result:98, bin(result):0b1100010
+        === str2 === char:a, ord(char):97, result:3,  bin(ord(char):0b1100001,  bin(result):0b11
+        === str2 === char:b, ord(char):98, result:97, bin(ord(char):0b1100010,  bin(result):0b1100001
+        === before return === result:97, chr(result):a
+        a
+        =============================
+        === str1 === char:a, ord(char):97, result:97, bin(ord(char):0b1100001,  bin(result):0b1100001
+        === str1 === char:b, ord(char):98, result:3,  bin(ord(char):0b1100010,  bin(result):0b11
+        === str1 === char:c, ord(char):99, result:96, bin(ord(char):0b1100011,  bin(result):0b1100000
+        === str1 === char:d, ord(char):100, result:4, bin(ord(char):0b1100100,  bin(result):0b100
+        === between str1 and str2 === result:4, bin(result):0b100
+        === str2 === char:a, ord(char):97, result:101, bin(ord(char):0b1100001,  bin(result):0b1100101
+        === str2 === char:b, ord(char):98, result:7,   bin(ord(char):0b1100010,  bin(result):0b111
+        === str2 === char:c, ord(char):99, result:100, bin(ord(char):0b1100011,  bin(result):0b1100100
+        === str2 === char:d, ord(char):100, result:0,  bin(ord(char):0b1100100,  bin(result):0b0
+        === str2 === char:e, ord(char):101, result:101,bin(ord(char):0b1100101,  bin(result):0b1100101
+        === before return === result:101, chr(result):e
+        e
+        =============================
+        === str1 === char:a, ord(char):97, result:97,   bin(ord(char):0b1100001,  bin(result):0b1100001
+        === str1 === char:a, ord(char):97, result:0,    bin(ord(char):0b1100001,  bin(result):0b0
+        === str1 === char:a, ord(char):97, result:97,   bin(ord(char):0b1100001,  bin(result):0b1100001
+        === str1 === char:b, ord(char):98, result:3,    bin(ord(char):0b1100010,  bin(result):0b11
+        === str1 === char:b, ord(char):98, result:97,   bin(ord(char):0b1100010,  bin(result):0b1100001
+        === str1 === char:c, ord(char):99, result:2,    bin(ord(char):0b1100011,  bin(result):0b10
+        === str1 === char:d, ord(char):100, result:102, bin(ord(char):0b1100100,  bin(result):0b1100110
+        === str1 === char:d, ord(char):100, result:2,   bin(ord(char):0b1100100,  bin(result):0b10
+        === between str1 and str2 === result:2, bin(result):0b10
+        === str2 === char:a, ord(char):97, result:99,   bin(ord(char):0b1100001,  bin(result):0b1100011
+        === str2 === char:b, ord(char):98, result:1,    bin(ord(char):0b1100010,  bin(result):0b1
+        === str2 === char:d, ord(char):100, result:101, bin(ord(char):0b1100100,  bin(result):0b1100101
+        === str2 === char:b, ord(char):98, result:7,    bin(ord(char):0b1100010,  bin(result):0b111
+        === str2 === char:a, ord(char):97, result:102,  bin(ord(char):0b1100001,  bin(result):0b1100110
+        === str2 === char:c, ord(char):99, result:5,    bin(ord(char):0b1100011,  bin(result):0b101
+        === str2 === char:a, ord(char):97, result:100,  bin(ord(char):0b1100001,  bin(result):0b1100100
+        === str2 === char:d, ord(char):100, result:0,   bin(ord(char):0b1100100,  bin(result):0b0
+        === str2 === char:e, ord(char):101, result:101, bin(ord(char):0b1100101,  bin(result):0b1100101
+        === before return === result:101, chr(result):e
+        """
+        result = 0
+        for char in str1:
+            result ^= ord(char)
+            # print(f"=== str1 === char:{char}, ord(char):{ord(char)}, result:{result}, bin(ord(char):{bin(ord(char))},  bin(result):{bin(result)}")
+
+        # print(f"=== between str1 and str2 === result:{result}, bin(result):{bin(result)}")
+        
+        for char in str2:
+            result ^= ord(char)
+            # print(f"=== str2 === char:{char}, ord(char):{ord(char)}, result:{result}, bin(ord(char):{bin(ord(char))},  bin(result):{bin(result)}")
+
+        # print(f"=== before return === result:{result}, chr(result):{chr(result)}")
+        return chr(result)
+
+    def str2list(self, string: str) -> list:
+        return [char for char in string]
+
+    def set_short_long(self, str1: str, str2: str) -> list:
+        if len(str1) > len(str2):
+            return str2, str1
+        elif len(str1) < len(str2):
+            return str1, str2
+        else:
+            print("len(str1) == len(str2)")
 
 
 def main():
