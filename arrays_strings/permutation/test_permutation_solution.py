@@ -31,6 +31,22 @@ class TestPermutation(unittest.TestCase):
         self.assertEqual(func('dog', 'doggo'), False)
         print('Success: test_permutation')
 
+class PermutationsAlt(object):
+
+    def is_permutation(self, str1, str2):
+        print(f'PermutationsAlt called')
+        if str1 == None or str2 == None:    return False
+        result = 0
+        for char in str1:
+            result ^= ord(char)
+        
+        for char in str2:
+            result ^= ord(char)
+        
+        if result:
+            return False
+        else:
+            return True
 
 def main():
     test = TestPermutation()
@@ -42,8 +58,10 @@ def main():
     except NameError:
         # Alternate solutions are only defined
         # in the solutions file
+        print(f'Except called')
         pass
 
 
 if __name__ == '__main__':
     main()
+
