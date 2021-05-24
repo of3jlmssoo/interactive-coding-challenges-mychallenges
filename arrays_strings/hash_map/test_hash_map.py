@@ -26,8 +26,9 @@ lst = [
 """
 
 import copy
-import unittest
 import dataclasses
+import unittest
+
 
 @dataclasses.dataclass
 class Item(object):
@@ -86,8 +87,8 @@ class TestItem(unittest.TestCase):
         except KeyError:
             print('test_set key duplicated')
 
-        print(f'test_get')
-        print(f'test_get ht.get(2) {ht.get(2)}')
+        # print(f'test_get')
+        # print(f'test_get ht.get(2) {ht.get(2)}')
 
         # try:
         #     print(f'test_set 2 ht.lst {ht.lst}')
@@ -99,16 +100,22 @@ class TestItem(unittest.TestCase):
 class HashTable(object):
 # class HashTable:
 
-    lstFormat = [None,None,None] # [key, value, chained?]
-    already_used =[]
+    # lstFormat = [None,None,None] # [key, value, chained?]
+    # already_used =[]
 
     def __init__(self, size):
         # TODO: Implement me
         # pass
         # lst_format = [None,None,None] # [key, value, chained?]
-        self.__lst = [[HashTable.lstFormat] for i in range(size)]
-        HashTable.already_used =[]
-        print(f'init {HashTable.already_used}')
+
+
+        self.lstFormat = [None,None,None]
+        self.__lst = [[self.lstFormat] for i in range(size)]
+        # self.__lst = [[HashTable.lstFormat] for i in range(size)]
+        
+        # HashTable.already_used =[]
+        # print(f'init {HashTable.already_used}')
+        self.__alreadyUsed = []
 
     @property
     def lst(self):
@@ -126,12 +133,16 @@ class HashTable(object):
         # TODO: Implement me
         # pass
 
-        if key in HashTable.already_used:
-            raise KeyError(f'set() key {key} is already used {HashTable.already_used}')
+        # if key in HashTable.already_used:
+        if key in self.__alreadyUsed:
+            # raise KeyError(f'set() key {key} is already used {HashTable.already_used}')
+            raise KeyError(f'set() key {key} is already used {self.__alreadyUsed}')
         else:
-            HashTable.already_used.append(key)
+            # HashTable.already_used.append(key)
+            self.__alreadyUsed.append(key)
 
-        if self.__lst[self._hash_function(key)] == [HashTable.lstFormat]:
+        # if self.__lst[self._hash_function(key)] == [HashTable.lstFormat]:
+        if self.__lst[self._hash_function(key)] == [self.lstFormat]:
             # in case of blank
             self.__lst[self._hash_function(key)] = [[key, value, None]]
             # print(f'set then {self.__lst}')
