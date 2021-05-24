@@ -103,12 +103,38 @@ class TestItem(unittest.TestCase):
         self.assertEqual(ht.get(3), 'Buu')
         self.assertEqual(ht.get(6), 'ZZZ')
 
-        # try:
-        #     print(f'test_set 2 ht.lst {ht.lst}')
-        #     ht.set(0, 'ABC')
-        #     print(f'test_set 3 ht.lst {ht.lst}')
-        # except KeyError:
-        #     print('test_set_overflow')
+        print(f'test_remove')
+        del ht; ht = HashTable(3)
+        try:
+            ht.remove(1) 
+        except KeyError:
+            print('test_remove key does not exist')
+
+
+        del ht; ht = HashTable(3); ht.set(0, 'foo'); ht.set(3, 'Buu'); ht.set(6, 'ZZZ'); ht.set(1, 'ONEONE'); ht.set(2, 'TWO')
+        ht.remove(1)
+        self.assertEqual(ht.lst, [[[0, 'foo', None], [3,'Buu', None], [6,'ZZZ', None]], [[2,'TWO',None]]])
+
+        del ht; ht = HashTable(3); ht.set(0, 'foo'); ht.set(3, 'Buu'); ht.set(6, 'ZZZ'); ht.set(1, 'ONEONE'); ht.set(2, 'TWO')
+        ht.remove(3)
+        self.assertEqual(ht.lst, [[[0, 'foo', None], [6,'ZZZ', None]], [[1,'ONEONE',None]],[[2,'TWO',None]]])
+
+        del ht; ht = HashTable(3); ht.set(0, 'foo'); ht.set(3, 'Buu'); ht.set(6, 'ZZZ'); ht.set(1, 'ONEONE'); ht.set(2, 'TWO')
+        ht.remove(2)
+        self.assertEqual(ht.lst, [[[0, 'foo', None], [3, 'Buu', None], [6, 'ZZZ', None]], [[1, 'ONEONE', None]]])
+
+
+        del ht; ht = HashTable(3); ht.set(0, 'foo'); ht.set(3, 'Buu'); ht.set(6, 'ZZZ'); ht.set(1, 'ONEONE'); ht.set(2, 'TWO')
+        ht.remove(0)
+        self.assertEqual(ht.lst, [[[3,'Buu', None], [6,'ZZZ', None]], [[1,'ONEONE',None]],[[2,'TWO',None]]])
+
+        del ht; ht = HashTable(3); ht.set(0, 'foo'); ht.set(3, 'Buu'); ht.set(6, 'ZZZ'); ht.set(1, 'ONEONE'); ht.set(2, 'TWO')
+        ht.remove(6)
+        self.assertEqual(ht.lst,  [[[0, 'foo', None], [3,'Buu', None]], [[1,'ONEONE',None]],[[2,'TWO',None]]])
+
+        ht.remove(3); ht.remove(2); ht.remove(1); ht.remove(0)
+        self.assertEqual(ht.lst,  [])
+
 
 class HashTable(object):
 # class HashTable:
@@ -193,7 +219,25 @@ class HashTable(object):
 
     def remove(self, key):
         # TODO: Implement me
-        pass
+        # pass
+        if key not in self.__alreadyUsed:
+            raise KeyError(f'remove() key {key} does not exist {self.__alreadyUsed}')
+        else:
+            lst_index = self._hash_function(key)
+            # print(
+            #     f'remove2 : {[h for h, i in enumerate(self.__lst[lst_index]) if i[0] == key][0]}' 
+            # )
+            lst_sub_index = [h for h, i in enumerate(self.__lst[lst_index]) if i[0] == key][0]
+            # if lst_sub_index == 0:
+            if len(self.__lst[lst_index]) == 1:
+                # print(f'remove 1 then: len {len(self.__lst[lst_index])} {self.__lst}')
+                self.__lst.pop(lst_index)
+                # print(f'remove 2 then: {self.__lst}')
+            else:
+                # print(f'remove 3 else: {self.__lst}')
+                self.__lst[lst_index].pop(lst_sub_index)
+                # print(f'remove 4 else: {self.__lst}')
+
 
 class TestHashMap(unittest.TestCase):
 
