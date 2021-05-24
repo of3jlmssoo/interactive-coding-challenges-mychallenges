@@ -86,6 +86,8 @@ class TestItem(unittest.TestCase):
         except KeyError:
             print('test_set key duplicated')
 
+        print(f'test_get')
+        print(f'test_get ht.get(2) {ht.get(2)}')
 
         # try:
         #     print(f'test_set 2 ht.lst {ht.lst}')
@@ -124,38 +126,13 @@ class HashTable(object):
         # TODO: Implement me
         # pass
 
-        # self.__lst =[
-        #     [1,'a',None],
-        #     [2,'b',None,
-        #     [3,'c',None,
-        # ]
-        # self.__lst =[
-        #     [1,'a',None],
-        #     ['','',None],
-        #     [3,'c',None],
-        # ]
-
-        # [[1, 'a', []],   ['', '', None], [3, 'c', []  ]] 1
-        # [['', '', None], ['', '', None], ['', '', None]]
-
-        # self.__lst =[
-        #     ['','',None],
-        #     ['','',None],
-        #     [3,'c',None]
-        # ]
-
-        # self.__lst =[
-        #     ['','',None],
-        #     ['','',None],
-        #     ['','',None]
-        # ]
-
-
         if key in HashTable.already_used:
             raise KeyError(f'set() key {key} is already used {HashTable.already_used}')
         else:
             HashTable.already_used.append(key)
+
         if self.__lst[self._hash_function(key)] == [HashTable.lstFormat]:
+            # in case of blank
             self.__lst[self._hash_function(key)] = [[key, value, None]]
             # print(f'set then {self.__lst}')
         else:
