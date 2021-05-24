@@ -157,9 +157,12 @@ class HashTable(object):
         # pass
         # self.__lst[self._hash_function(key)]
         # specified key does not exist
-        if type(self.__lst[self._hash_function(key)][0]) != int:
-            raise KeyError('get KeyError')
 
+        # if type(self.__lst[self._hash_function(key)][0]) != int:
+        #     raise KeyError('get KeyError')
+
+        if key not in self.__alreadyUsed:
+            raise KeyError('get KeyError')
 
     def remove(self, key):
         # TODO: Implement me
