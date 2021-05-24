@@ -223,6 +223,8 @@ class HashTable(object):
         if key not in self.__alreadyUsed:
             raise KeyError(f'remove() key {key} does not exist {self.__alreadyUsed}')
         else:
+            self.__alreadyUsed.remove(key)
+
             lst_index = self._hash_function(key)
             # print(
             #     f'remove2 : {[h for h, i in enumerate(self.__lst[lst_index]) if i[0] == key][0]}' 
@@ -273,13 +275,15 @@ class TestHashMap(unittest.TestCase):
         self.assertEqual(hash_table.get(0), 'foo')
         self.assertEqual(hash_table.get(20), 'foo3') 
 
-        # print("Test: remove on a key that already exists")
+        print("Test: remove on a key that already exists")
         # hash_table.remove(10)
-        # self.assertEqual(hash_table.get(0), 'foo')
+        hash_table.remove(20)
+        self.assertEqual(hash_table.get(0), 'foo')
         # self.assertRaises(KeyError, hash_table.get, 10)
+        self.assertRaises(KeyError, hash_table.get, 20)
 
-        # print("Test: remove on a key that doesn't exist")
-        # self.assertRaises(KeyError, hash_table.remove, -1)
+        print("Test: remove on a key that doesn't exist")
+        self.assertRaises(KeyError, hash_table.remove, -1)
 
         print('Success: test_end_to_end')
 
