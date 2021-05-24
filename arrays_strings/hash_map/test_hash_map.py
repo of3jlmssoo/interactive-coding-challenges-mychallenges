@@ -87,8 +87,21 @@ class TestItem(unittest.TestCase):
         except KeyError:
             print('test_set key duplicated')
 
-        # print(f'test_get')
-        # print(f'test_get ht.get(2) {ht.get(2)}')
+        print(f'test_get')
+        try:
+            ht.get(7)
+        except KeyError:
+            print(f'test_get key is out of range')
+        # ht.get(0)
+        # ht.get(3)
+        # ht.get(6)
+        # print( ht.get(1) )
+        # ht.get(2)
+        self.assertEqual(ht.get(1), 'ONEONE')
+        self.assertEqual(ht.get(2), 'TWO')
+        self.assertEqual(ht.get(0), 'foo')
+        self.assertEqual(ht.get(3), 'Buu')
+        self.assertEqual(ht.get(6), 'ZZZ')
 
         # try:
         #     print(f'test_set 2 ht.lst {ht.lst}')
@@ -135,7 +148,9 @@ class HashTable(object):
 
         # if key in HashTable.already_used:
         if key in self.__alreadyUsed:
-            # raise KeyError(f'set() key {key} is already used {HashTable.already_used}')
+            # raise KeyError(f'set() key {key} is already used {HashTable.already_used}'t(
+        #     [i[1] for i in self.__lst[lst_index] if i[0] == key][0]
+        # )
             raise KeyError(f'set() key {key} is already used {self.__alreadyUsed}')
         else:
             # HashTable.already_used.append(key)
@@ -161,8 +176,20 @@ class HashTable(object):
         # if type(self.__lst[self._hash_function(key)][0]) != int:
         #     raise KeyError('get KeyError')
 
+        # print(f'get called with key {key}')
         if key not in self.__alreadyUsed:
             raise KeyError('get KeyError')
+        
+        lst_index = self._hash_function(key)
+        # print(f'get called {self.__lst[lst_index]}')
+
+        # for i in self.__lst[lst_index]:
+        #     print(i)
+
+        # print(
+        #     [i[1] for i in self.__lst[lst_index] if i[0] == key][0]
+        # )
+        return    [i[1] for i in self.__lst[lst_index] if i[0] == key][0]
 
     def remove(self, key):
         # TODO: Implement me
@@ -181,19 +208,26 @@ class TestHashMap(unittest.TestCase):
 
         print("Test: set on an empty hash table index")
         hash_table.set(0, 'foo')
-        # self.assertEqual(hash_table.get(0), 'foo')
-        # hash_table.set(1, 'bar')
-        # self.assertEqual(hash_table.get(1), 'bar')
+        self.assertEqual(hash_table.get(0), 'foo')
+        hash_table.set(1, 'bar')
+        self.assertEqual(hash_table.get(1), 'bar')
 
-        # print("Test: set on a non empty hash table index")
-        # hash_table.set(10, 'foo2')
-        # self.assertEqual(hash_table.get(0), 'foo')
-        # self.assertEqual(hash_table.get(10), 'foo2')
+        print("Test: set on a non empty hash table index")
+        hash_table.set(10, 'foo2')
+        self.assertEqual(hash_table.get(0), 'foo')
+        self.assertEqual(hash_table.get(10), 'foo2')
 
         # print("Test: set on a key that already exists")
         # hash_table.set(10, 'foo3')
         # self.assertEqual(hash_table.get(0), 'foo')
-        # self.assertEqual(hash_table.get(10), 'foo3')
+        # self.assertEqual(hash_table.get(10), 'foo3') 
+        #
+        # keys must be unique in this program so that the key 10 changed to 20 
+        #
+        print("Test: set on a key that already exists")
+        hash_table.set(20, 'foo3')
+        self.assertEqual(hash_table.get(0), 'foo')
+        self.assertEqual(hash_table.get(20), 'foo3') 
 
         # print("Test: remove on a key that already exists")
         # hash_table.remove(10)
