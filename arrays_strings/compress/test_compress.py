@@ -16,9 +16,6 @@ https://stackoverflow.com/questions/6306098/regexp-match-repeated-characters
 import unittest
 from itertools import groupby
 
-
-
-
 class CompressString(object):
 
     def compress(self, string):
