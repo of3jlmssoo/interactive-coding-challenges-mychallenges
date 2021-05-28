@@ -1,5 +1,10 @@
 """ test_compress.py alt case
 
+正規表現で(\w\s)が1つ以上連続する単位でグルーピング
+グルーピングされた各グループ(match.group())の長さが>2の場合
+    then 文字＋繰返し数をresultに追加
+    else そのままresultに追加
+    
 AA BB CC
 AA BB CC
 
@@ -26,14 +31,14 @@ def compress_string(string: str) -> str:
     iterator = pattern.finditer(string)
     result = ''
     for match in iterator:
-        # if len(match.group()) > 0:
-            print("1 ", match.group(), match.start(), match.end(), match.span()[0], match.span()[1])
-            if (match.end()-match.start()) > 2:
-                result = result + str(list(match.group())[0]) + str(match.end()-match.start())
-                # print("result1 : ",result, match.group())
-            else:
-                result += match.group()
-                # print("result2 : ",result)
+        # print("1 ", match.group(), match.start(), match.end(), match.span()[0], match.span()[1])
+        current_part_str = match.group()
+        if (current_part_str_len := len(current_part_str)) > 2:
+            result = result + current_part_str[0] + str(current_part_str_len)
+            # print("result1 : ",result, match.group())
+        else:
+            result += match.group()
+            # print("result2 : ",result)
     return result 
 
 
