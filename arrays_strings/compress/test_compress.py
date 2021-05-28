@@ -1,4 +1,11 @@
-""" [summary]
+""" test_compress.py
+
+groupbyでstringを分割。AABの場合、['A', 'A'], ['B']
+分割された要素のlen > 1の場合、const_charsに[分割された要素の長さ、分割された要素]のリストをappend
+    const_chars=[[2, ['A', 'A']],,,]
+const_charsを分割された要素の長さでソート。降順
+ソートされたリストの1つ目の”分割された要素のlen” > 2の場合then
+    replace( 一文字取出*len, 一文字取出+str(len))
 
 self.assertEqual(func('AABBCC'), 'AABBCC')
 self.assertEqual(func(  'AAA B CC DDDD E'), 
@@ -8,10 +15,18 @@ self.assertEqual(func(' B AAA CC DDDD'), '
 self.assertEqual(func('AAA B AA CC DDDD'), '
                        A3  B A2 C2 D4')
 問題は2連続の際に置換えが発生するケースと発生しないケースがある。
-また、何文字連続するかもわからない
+
 python normal expression continuos characters
 https://stackoverflow.com/questions/6306098/regexp-match-repeated-characters
 [list(g) for k, g in groupby('AAAABBBCCD')] --> AAAA BBB CC D
+とあるが、実際には、AAABAACCDDDD の場合、
+    A ['A', 'A', 'A']
+    B ['B']
+    C ['C', 'C']
+    D ['D', 'D', 'D', 'D']
+    E ['E']
+が返される。
+
 """
 import unittest
 from itertools import groupby
@@ -23,7 +38,8 @@ class CompressString(object):
         # pass
         if string == None: return None
         if string == '': return ''
-
+        
+        
         grouped_by_string = [list(g) for k, g in groupby(string)]
         cont_chars=[]
         [cont_chars.append([len(list(i)), i]) for i in grouped_by_string if len(list(i))>1]
