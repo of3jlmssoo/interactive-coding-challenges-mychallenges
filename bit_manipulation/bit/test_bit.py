@@ -22,7 +22,8 @@ update_bit  indexの位置のbitにvalueをセットする
 8
 128+8+4+2=142
 
-pythonのbin()が不要な0を追加してくれない。0x+8桁前提で途中まで進めたためbin()のreturnの長さ<10の場合、bin_to_ten()で0をパッディングする
+bin_to_ten()
+pythonのbin()が不要な0を追加してくれない。0x+8桁のフォーマット前提で途中まで進めたためbin()のreturnの長さ<10の場合、bin_to_ten()で0をパッディングする
 
 """
 import unittest
@@ -75,10 +76,14 @@ class Bit(object):
         # TODO: Implement me
         # pass
         self.__numBin = self.bin_to_ten(bin(self.__numInt))
+        print( self.__numBin[:9-index]+'0'*(index+1) )
+        return int(self.__numBin[:9-index]+'0'*(index+1), base=2) 
 
     def update_bit(self, index, value):
         # TODO: Implement me
-        pass
+        # pass
+        self.__numBin = self.bin_to_ten(bin(self.__numInt))
+        return int(self.__numBin[0:9-index]+str(value)+self.__numBin[9-index+1:], base=2)
 
     def bin_to_ten(self, bin_output: str):
         if len(bin_output) < 10:
@@ -138,6 +143,13 @@ class myTestBit(unittest.TestCase):
         number = int('11111111', base=2)
         bit = Bit(number)
         bit.clear_bits_index_to_lsb(index=1)
+        bit.clear_bits_index_to_lsb(index=2)
+        bit.clear_bits_index_to_lsb(index=3)
+        bit.clear_bits_index_to_lsb(index=4)
+        bit.clear_bits_index_to_lsb(index=5)
+        bit.clear_bits_index_to_lsb(index=6)
+        bit.clear_bits_index_to_lsb(index=7)
+        bit.clear_bits_index_to_lsb(index=0)
 
 class TestBit(unittest.TestCase):
 
@@ -159,18 +171,20 @@ class TestBit(unittest.TestCase):
         expected = int('00000110', base=2)
         self.assertEqual(bit.clear_bits_msb_to_index(index=3), expected) 
         
-        # bit = Bit(number)
-        # expected = int('10000000', base=2)
-        # self.assertEqual(bit.clear_bits_index_to_lsb(index=3), expected)
+        bit = Bit(number)
+        expected = int('10000000', base=2)
+        self.assertEqual(bit.clear_bits_index_to_lsb(index=3), expected)
 
-        # bit = Bit(number)
-        # self.assertEqual(bit.update_bit(index=3, value=1), number) bit = Bit(number)
-
-        # expected = int('10000110', base=2)
-        # self.assertEqual(bit.update_bit(index=3, value=0), expected) bit = Bit(number)
-
-        # expected = int('10001111', base=2)
-        # self.assertEqual(bit.update_bit(index=0, value=1), expected)
+        bit = Bit(number)
+        self.assertEqual(bit.update_bit(index=3, value=1), number) 
+        
+        bit = Bit(number)
+        expected = int('10000110', base=2)
+        self.assertEqual(bit.update_bit(index=3, value=0), expected) 
+        
+        bit = Bit(number)
+        expected = int('10001111', base=2)
+        self.assertEqual(bit.update_bit(index=0, value=1), expected)
         print('Success: test_bit')
 
 
