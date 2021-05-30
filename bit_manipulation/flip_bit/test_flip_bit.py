@@ -50,11 +50,6 @@ class Bits(object):
         ones_len_sum = [ones_len[i]+ones_len[i+1] for i in range(len(ones_len)-1) if ones_len[i] and ones_len[i+1] ]
         return max(ones_len_sum)+1
 
- 
-# [6, 3, 4, 0, 0, 6, 0, 0, 0, 0]
-# max_value  9
- 
-        return max_value+1
                 
                 
 class TestBits(unittest.TestCase):
