@@ -86,11 +86,14 @@ class Bit(object):
         return int(self.__numBin[0:9-index]+str(value)+self.__numBin[9-index+1:], base=2)
 
     def bin_to_ten(self, bin_output: str):
-        if len(bin_output) < 10:
-            result = bin_output[0:2]+'0'*(10-len(bin_output))+bin_output[2:]
-        else:
-            result = bin_output
-        return result
+        # if len(bin_output) < 10:
+        #     result = bin_output[0:2]+'0'*(10-len(bin_output))+bin_output[2:]
+        # else:
+        #     result = bin_output
+        # return result
+
+        result = [bin_output, bin_output[0:2]+'0'*(10-len(bin_output))+bin_output[2:]]
+        return result[len(bin_output) < 10]
 
 
 
