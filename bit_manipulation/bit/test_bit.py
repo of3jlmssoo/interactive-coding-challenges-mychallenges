@@ -92,6 +92,8 @@ class Bit(object):
         #     result = bin_output
         # return result
 
+        STR_LEN = 10 # change two 10s to STR_LEN
+
         result = [bin_output, bin_output[0:2]+'0'*(10-len(bin_output))+bin_output[2:]]
         return result[len(bin_output) < 10]
 
