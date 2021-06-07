@@ -1,27 +1,35 @@
 """ test_bst.py
+
+[参考情報]
 (1) https://ja.wikipedia.org/wiki/%E4%BA%8C%E5%88%86%E6%9C%A8   
 (2) https://ja.wikipedia.org/wiki/%E4%BA%8C%E5%88%86%E6%8E%A2%E7%B4%A2
 (3) https://en.wikipedia.org/wiki/Tree_traversal
+
+(1)を参考にclassの構造を決める
+
+
+[0-9でのできあがりイメージ例]
+データ入力順番 6 2 1 4 0 3 5 7 9 8
 
       6   
    2     7
  1   4      9
 0   3 5    8
 
-Node.ls_nodes <__main__.Node object at 0x7f615426e5b0> data:6, 
-Node.ls_nodes <__main__.Node object at 0x7f615426edc0> data:2, 
-Node.ls_nodes <__main__.Node object at 0x7f615426ef40> data:1, 
-Node.ls_nodes <__main__.Node object at 0x7f615427b850> data:0, 
-Node.ls_nodes <__main__.Node object at 0x7f615421a190> data:4, 
-Node.ls_nodes <__main__.Node object at 0x7f615421a1f0> data:3, 
+in-orderの場合のアウトプット順 0 1 2 3 4 5 6 7 8 9
 
 
+[insertの処理の流れ]
+node : ツリーにインサートされるノード
+current_node : 
+    ・最初はルートノードが設定される。最終的にはnodeの親ノードが設定される
+    ・ループ
+        ・dataの大小によりcurrent_nodeのleftかrightが選ばれる
+        ・left or rightがNoneであればこのcurrent_nodoが親ノードになる
+        ・left of rightがNoneでなければleft or rigthに設定されたノードをcurrent_nodeにセットする
 
-in-order 1 2 3 4 5 6 7 8 9
-data input order 6 2 1 4 3 5 7 9 8
 
-(1)を参考にclassの構造を決める
-
+[insert処理の流れメモ]
 6 > 4
     2 > 1: 2.left = 1
     2 < 4: 2.right = 4 
@@ -65,10 +73,10 @@ elif current_node.data < node.data:
 else:
     raise Exception(f'Something wrong')
 
-            
+ルートノード            
 """
-import unittest
 import logging
+import unittest
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
