@@ -1,6 +1,6 @@
 """ test_bst.py
 [既存コードの修正]
-class TestTreeのin_order_traversalのところは修正を行った。
+class TestTreeの__init__とin_order_traversalのところは修正を行った。
 
 [参考情報]
 (1) https://ja.wikipedia.org/wiki/%E4%BA%8C%E5%88%86%E6%9C%A8   
@@ -52,29 +52,6 @@ current_node :
         １と比較
         ４と比較
 
-if current_node.data > node.data:
-    is_occupied = current_node.left
-elif current_node.data < node.data: 
-    is_occupied = current_node.right
-else:
-    raise Exception(f'Something wrong')
-
-while is_occupied != None:
-    current_node = current_node.
-    if current_node.data > node.data:
-        is_occupied = current_node.left
-    elif current_node.data < node.data: 
-        is_occupied = current_node.right
-    else:
-        raise Exception(f'Something wrong')
-
-if current_node.data > node.data:
-    current_node.left = node.data
-elif current_node.data < node.data: 
-    current_node.right = node.data
-else:
-    raise Exception(f'Something wrong')
-
 [(3)の情報 inorder]
 inorder(node)
     if (node == null)
@@ -113,7 +90,6 @@ class Node(object):
         self.left = None
         self.right = None
         self.parent = None
-        # if not logger.disabled: self.nodes.append(self)
         self.nodes.append(self)
         logger.debug(f'Node.__init__ self:{self}, data:{self.data}, left:{self.left}, right:{self.right}, parent:{self.parent}')
 
@@ -123,11 +99,9 @@ class Node(object):
             print(f'Node.ls_nodes No node available.')
         else:
             for n in Node.nodes:
-                # print(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
                 logger.debug(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
 
     def set_left(self, node):
-        logger.debug(f'Node.set_left called.')
         self.left = node
         logger.debug(f'Node.set_left called. self.left {self.left}')
 
@@ -148,32 +122,13 @@ class Bst(object):
             Bst.the_root = node
         else:
             current_node = Bst.the_root
-            logger.debug(f'Bst.insert 1 current_node : {current_node}')
-            # if current_node.data > node.data:
-            #     while current_node.left != None:
-            #         current_node = current_node.left
-            #         logger.debug(f'Bst.insert 2 current_node : {current_node}')
-            #     current_node.set_left(node)
-            #     node.parent = current_node
-            #     logger.debug(f'Bst.insert current_node.left is set to node {node}')
-            # if current_node.data > node.data:
-            #     is_occupied = current_node.left
-            #     logger.debug(f'Bst.insert 2-1 is_occupied:{is_occupied}, current_node.left:{current_node.left}')
-            # elif current_node.data < node.data: 
-            #     is_occupied = current_node.right
-            #     logger.debug(f'Bst.insert 2-2 is_occupied:{is_occupied}, current_node.right:{current_node.right}')
-            # else:
-            #     raise Exception(f'Something wrong')
-
-            logger.debug(f'Bst.insert 3-00 while current_node:{current_node}')
             is_occupied = False
             i=0
             while is_occupied == False:
-                i += 1
-                if i>10:
-                    logger.debug(f'Bst.insert overflow')
-                    break
-                logger.debug(f'Bst.insert 3-0 while ')
+                # i += 1
+                # if i>10:
+                #     logger.debug(f'Bst.insert overflow')
+                #     break
                 if current_node.data > node.data:
                     logger.debug(f'Bst.insert 3-1 while current_node:{current_node} current_node.left:{current_node.left}')
                     if current_node.left == None:
@@ -192,40 +147,11 @@ class Bst(object):
                 else:
                     raise Exception(f'Something wrong. current_node.data:{current_node.data}, node.data:{node.data}')
 
-            
-            logger.debug(f'Bst.insert 4-0 after while current_node:{current_node} ')
-            # current_node.data = node.data 
-
-
-            # if current_node.data > node.data:
-            #     logger.debug(f'Bst.insert 4-1 while current_node:{current_node} ')
-            #     current_node.left = node.data
-            # elif current_node.data < node.data: 
-            #     logger.debug(f'Bst.insert 4-2 while current_node:{current_node} ')
-            #     current_node.right = node.data
-            # else:
-            #     raise Exception(f'Something wrong')
-
-
     def ls_nodes(self):
         if Bst.the_root == None: 
             print(f'Bst.ls_nodes No nodes available.')
         else:
             Bst.the_root.ls_nodes()
-
-    # def in_order_traversal(self):
-    #     self.inorder(Bst.the_root)
-    #     # print(
-    #     #     [i for i in self.inorder(Bst.the_root) ]
-    #     # )
-
-    # def inorder(self, node):
-    #     if not isinstance(node,Node):
-    #         return
-    #     self.inorder(node.left)
-    #     print("====> ",node.data)
-    #     # yield node.data
-    #     self.inorder(node.right)
 
     def in_order_traversal(self):
         # print(
@@ -298,19 +224,22 @@ class TestTree(unittest.TestCase):
         bst.insert(3)
         bst.insert(4)
         bst.insert(5)
-        in_order_traversal(bst.root, self.results.add_result)
-        self.assertEqual(str(self.results), '[1, 2, 3, 4, 5]')
+        # in_order_traversal(bst.root, self.results.add_result)
+        # self.assertEqual(str(self.results), '[1, 2, 3, 4, 5]')
+        
+        logger.debug(f'ls_nodes() {bst.ls_nodes()}')
+        self.assertEqual(bst.in_order_traversal(), [1, 2, 3, 4, 5])
 
         print('Success: test_tree')
 
 
 def main():
-    test = TestTree()
-    test.test_tree_one()
+    # test = TestTree()
+    # test.test_tree_one()
     # test.test_tree_two()
 
-    # mytest = MyTestTree()
-    # mytest.test_tree_one()
+    mytest = MyTestTree()
+    mytest.test_tree_one()
 
 if __name__ == '__main__':
     main()
