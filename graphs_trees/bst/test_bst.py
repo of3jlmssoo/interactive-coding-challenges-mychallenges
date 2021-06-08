@@ -110,7 +110,6 @@ class Bst(object):
     def __init__(self):
         logger.debug(f'Bst.__init___ called. ')
         self.__theRoot = None
-        pass
 
     def insert(self, data):
         # TODO: Implement me
@@ -196,6 +195,7 @@ class MyTestTree(unittest.TestCase):
         bst.insert(8)
         logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         self.assertEqual( bst.in_order_traversal(), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] )
+        print('Success: MyTestTree.test_tree_one')
 
 class TestTree(unittest.TestCase):
 
@@ -233,7 +233,7 @@ class TestTree(unittest.TestCase):
         logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         self.assertEqual(bst.in_order_traversal(), [1, 2, 3, 4, 5])
 
-        print('Success: test_tree')
+        print('Success: test_tree_two')
 
 
 def main():

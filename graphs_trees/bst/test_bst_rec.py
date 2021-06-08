@@ -105,7 +105,6 @@ class Bst(object):
     def __init__(self):
         logger.debug(f'Bst.__init___ called. ')
         self.__theRoot = None
-        pass
 
     def insert(self, data):
     # ・Bst.insert
@@ -142,53 +141,7 @@ class Bst(object):
                 self.__insertIntoTree(current_node, node)
             else:
                 print(f'Bst.__insertIntoTree 2 : something wrong current_node:{current_node}, node:{node}')
-######################################################################################################
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # def insert(self, data):
-    #     # TODO: Implement me
-    #     # pass
-    #     logger.debug(f'Bst.insert called. data : {data}')
-    #     node = Node(data)
-    #     # if Bst.the_root == None:
-    #     #     Bst.the_root = node
-    #     if self.__theRoot == None:
-    #         self.__theRoot = node
-    #     else:
-    #         # current_node = Bst.the_root
-    #         current_node = self.__theRoot
-    #         is_occupied = False
-    #         i=0
-    #         while is_occupied == False:
-    #             if current_node.data > node.data:
-    #                 logger.debug(f'Bst.insert 3-1 while current_node:{current_node} current_node.left:{current_node.left}')
-    #                 if current_node.left == None:
-    #                     logger.debug(f'Bst.insert 3-1-1 while current_node:{current_node} current_node.left:{current_node.left}')
-    #                     is_occupied = True
-    #                     current_node.left = node
-    #                     node.parent = current_node
-    #                 current_node = current_node.left
-    #             elif current_node.data < node.data: 
-    #                 logger.debug(f'Bst.insert 3-2 while ')
-    #                 if current_node.right == None:
-    #                     is_occupied = True
-    #                     current_node.right = node
-    #                     node.parent = current_node
-    #                 current_node = current_node.right
-    #             else:
-    #                 raise Exception(f'Something wrong. current_node.data:{current_node.data}, node.data:{node.data}')
 
     def ls_nodes(self):
         # if Bst.the_root == None: 
