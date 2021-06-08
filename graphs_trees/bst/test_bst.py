@@ -76,7 +76,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 class Node(object):
 
@@ -92,6 +92,7 @@ class Node(object):
         self.parent = None
         self.nodes.append(self)
         logger.debug(f'Node.__init__ self:{self}, data:{self.data}, left:{self.left}, right:{self.right}, parent:{self.parent}')
+        logger.debug(f'Node.__init__ nodes:{Node.nodes}')
 
 
     def ls_nodes(self):
@@ -101,16 +102,14 @@ class Node(object):
             for n in Node.nodes:
                 logger.debug(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
 
-    def set_left(self, node):
-        self.left = node
-        logger.debug(f'Node.set_left called. self.left {self.left}')
 
 class Bst(object):
 
-    the_root = None
+    # the_root = None
 
     def __init__(self):
         logger.debug(f'Bst.__init___ called. ')
+        self.__theRoot = None
         pass
 
     def insert(self, data):
@@ -118,17 +117,16 @@ class Bst(object):
         # pass
         logger.debug(f'Bst.insert called. data : {data}')
         node = Node(data)
-        if Bst.the_root == None:
-            Bst.the_root = node
+        # if Bst.the_root == None:
+        #     Bst.the_root = node
+        if self.__theRoot == None:
+            self.__theRoot = node
         else:
-            current_node = Bst.the_root
+            # current_node = Bst.the_root
+            current_node = self.__theRoot
             is_occupied = False
             i=0
             while is_occupied == False:
-                # i += 1
-                # if i>10:
-                #     logger.debug(f'Bst.insert overflow')
-                #     break
                 if current_node.data > node.data:
                     logger.debug(f'Bst.insert 3-1 while current_node:{current_node} current_node.left:{current_node.left}')
                     if current_node.left == None:
@@ -148,16 +146,21 @@ class Bst(object):
                     raise Exception(f'Something wrong. current_node.data:{current_node.data}, node.data:{node.data}')
 
     def ls_nodes(self):
-        if Bst.the_root == None: 
+        # if Bst.the_root == None: 
+        #     print(f'Bst.ls_nodes No nodes available.')
+        # else:
+        #     Bst.the_root.ls_nodes()
+        if self.__theRoot == None: 
             print(f'Bst.ls_nodes No nodes available.')
         else:
-            Bst.the_root.ls_nodes()
+            self.__theRoot.ls_nodes()
 
     def in_order_traversal(self):
         # print(
         #     [i for i in self.inorder(Bst.the_root) ]
         # )
-        return    [i for i in self.inorder(Bst.the_root) ]
+        # return    [i for i in self.inorder(Bst.the_root) ]
+        return    [i for i in self.inorder(self.__theRoot) ]
 
     def inorder(self, node):
         if not isinstance(node,Node):
@@ -192,7 +195,7 @@ class MyTestTree(unittest.TestCase):
         # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(8)
         logger.debug(f'ls_nodes() {bst.ls_nodes()}')
-        print( bst.in_order_traversal() )
+        self.assertEqual( bst.in_order_traversal(), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] )
 
 class TestTree(unittest.TestCase):
 
@@ -234,9 +237,9 @@ class TestTree(unittest.TestCase):
 
 
 def main():
-    # test = TestTree()
-    # test.test_tree_one()
-    # test.test_tree_two()
+    test = TestTree()
+    test.test_tree_one()
+    test.test_tree_two()
 
     mytest = MyTestTree()
     mytest.test_tree_one()
