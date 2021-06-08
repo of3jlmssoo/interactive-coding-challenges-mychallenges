@@ -1,4 +1,6 @@
 """ test_bst.py
+[既存コードの修正]
+class TestTreeのin_order_traversalのところは修正を行った。
 
 [参考情報]
 (1) https://ja.wikipedia.org/wiki/%E4%BA%8C%E5%88%86%E6%9C%A8   
@@ -73,7 +75,17 @@ elif current_node.data < node.data:
 else:
     raise Exception(f'Something wrong')
 
-ルートノード            
+[(3)の情報 inorder]
+inorder(node)
+    if (node == null)
+        return
+    inorder(node.left)
+    visit(node)
+    inorder(node.right)
+
+
+
+
 """
 import logging
 import unittest
@@ -101,8 +113,8 @@ class Node(object):
         self.left = None
         self.right = None
         self.parent = None
-        # if not logger.disabled: self.nodes.append([self.data,self.left,self.right,self.parent])
-        if not logger.disabled: self.nodes.append(self)
+        # if not logger.disabled: self.nodes.append(self)
+        self.nodes.append(self)
         logger.debug(f'Node.__init__ self:{self}, data:{self.data}, left:{self.left}, right:{self.right}, parent:{self.parent}')
 
 
@@ -111,7 +123,8 @@ class Node(object):
             print(f'Node.ls_nodes No node available.')
         else:
             for n in Node.nodes:
-                print(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
+                # print(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
+                logger.debug(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
 
     def set_left(self, node):
         logger.debug(f'Node.set_left called.')
@@ -177,7 +190,7 @@ class Bst(object):
                         node.parent = current_node
                     current_node = current_node.right
                 else:
-                    raise Exception(f'Something wrong')
+                    raise Exception(f'Something wrong. current_node.data:{current_node.data}, node.data:{node.data}')
 
             
             logger.debug(f'Bst.insert 4-0 after while current_node:{current_node} ')
@@ -200,38 +213,66 @@ class Bst(object):
         else:
             Bst.the_root.ls_nodes()
 
+    # def in_order_traversal(self):
+    #     self.inorder(Bst.the_root)
+    #     # print(
+    #     #     [i for i in self.inorder(Bst.the_root) ]
+    #     # )
+
+    # def inorder(self, node):
+    #     if not isinstance(node,Node):
+    #         return
+    #     self.inorder(node.left)
+    #     print("====> ",node.data)
+    #     # yield node.data
+    #     self.inorder(node.right)
+
+    def in_order_traversal(self):
+        # print(
+        #     [i for i in self.inorder(Bst.the_root) ]
+        # )
+        return    [i for i in self.inorder(Bst.the_root) ]
+
+    def inorder(self, node):
+        if not isinstance(node,Node):
+            return 
+        yield from self.inorder(node.left)
+        # print("====> ",node.data)
+        yield node.data
+        yield from self.inorder(node.right)
+
 class MyTestTree(unittest.TestCase):
 
     def test_tree_one(self):
         logger.debug(f'MyTestTree.test_tree_one called. ')
         bst = Bst()
         bst.insert(6)
-        bst.ls_nodes()
+        # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(2)
-        bst.ls_nodes()
+        # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(1)
-        bst.ls_nodes()
+        # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(0)
-        bst.ls_nodes()
-
+        # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(4)
-        bst.ls_nodes()
+        # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(3)
-        bst.ls_nodes()
+        # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(5)
-        bst.ls_nodes()
+        # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(7)
-        bst.ls_nodes()
+        # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(9)
-        bst.ls_nodes()
+        # logger.debug(f'ls_nodes() {bst.ls_nodes()}')
         bst.insert(8)
-        bst.ls_nodes()
+        logger.debug(f'ls_nodes() {bst.ls_nodes()}')
+        print( bst.in_order_traversal() )
 
 class TestTree(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(TestTree, self).__init__()
-        self.results = Results()
+        # self.results = Results()
 
     def test_tree_one(self):
         bst = Bst()
@@ -240,9 +281,15 @@ class TestTree(unittest.TestCase):
         bst.insert(8)
         bst.insert(1)
         bst.insert(3)
-        in_order_traversal(bst.root, self.results.add_result)
-        self.assertEqual(str(self.results), '[1, 2, 3, 5, 8]')
-        self.results.clear_results()
+        
+        logger.debug(f'ls_nodes() {bst.ls_nodes()}')
+
+        # in_order_traversal(bst.root, self.results.add_result)
+        # self.assertEqual(str(self.results), '[1, 2, 3, 5, 8]')
+        # self.results.clear_results()
+        self.assertEqual(bst.in_order_traversal(), [1, 2, 3, 5, 8])
+        
+        print('Success: test_tree_one')
 
     def test_tree_two(self):
         bst = Bst()
@@ -258,12 +305,12 @@ class TestTree(unittest.TestCase):
 
 
 def main():
-    # test = TestTree()
-    # test.test_tree_one()
+    test = TestTree()
+    test.test_tree_one()
     # test.test_tree_two()
 
-    mytest = MyTestTree()
-    mytest.test_tree_one()
+    # mytest = MyTestTree()
+    # mytest.test_tree_one()
 
 if __name__ == '__main__':
     main()
