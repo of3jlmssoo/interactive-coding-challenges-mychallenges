@@ -38,7 +38,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 
 
@@ -53,32 +53,32 @@ class MinBst(object):
         # TODO: Implement me
         # pass
         logger.debug(f'MinBst.create_min_bst called. ')
-        return self.__create_min_bst(array, None)
+        self.__create_min_bst(array, None)
+        return self.__theRoot 
 
     def __create_min_bst(self, array, parent_node):
-        logger.debug(f'MinBst.__create_min_bst called. ')
+        logger.debug(f'\n\nMinBst.__create_min_bst called. array:{array}, parent_node:{parent_node}')
 
         l = math.floor(len(array)//2)
         
-        print( array[0:l], array[l], array[l+1:])
+        logger.debug(f'\n\nMinBst.__create_min_bst called. {array[0:l]}, {array[l]}, {array[l+1:]}')
+        # print("===> ", array[0:l], array[l], array[l+1:])
+
         node = Node(array[l])
+
         if self.__theRoot == None:
-            logger.debug(f'MinBst.__create_min_bst self__theRoot == None. ')
             self.__theRoot = node
             parent_node = node
 
         if len(array[0:l]): 
-            logger.debug(f'MinBst.__create_min_bst left. ')
-            parent_node.left = node 
-            node.parent = parent_node
-            self.__create_min_bst(array[0:l], node)
-        if len(array[l+1:]): 
-            logger.debug(f'MinBst.__create_min_bst right. ')
-            parent_node.right = node 
-            node.parent = parent_node
-            self.__create_min_bst(array[l+1:], node)
+            node.left = self.__create_min_bst(array[0:l], node)
+            node.left.parent = node
 
-        return self.__theRoot
+        if len(array[l+1:]): 
+            node.right = self.__create_min_bst(array[l+1:], node)
+            node.right.parent = node
+
+        return node
 
 class Node(object):
 
@@ -94,7 +94,7 @@ class Node(object):
         self.parent = None
         self.nodes.append(self)
         logger.debug(f'Node.__init__ self:{self}, data:{self.data}, left:{self.left}, right:{self.right}, parent:{self.parent}')
-        logger.debug(f'Node.__init__ nodes:{Node.nodes}')
+        # logger.debug(f'Node.__init__ nodes:{Node.nodes}')
 
 
     def ls_nodes(self):
@@ -110,9 +110,11 @@ class MyTestBstMin(unittest.TestCase):
 
     def test_bst_min(self):
         min_bst = MinBst()
-        # array = [0, 1, 2, 3, 4, 5, 6]
         array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+        array = [0, 1, 2]
+        array = [0, 1, 2, 3, 4, 5, 6]
         root = min_bst.create_min_bst(array)
+        logger.debug(f'Node.ls_nodes {root.ls_nodes()}')
 
         # self.assertEqual(height(root), 3)
         
@@ -141,8 +143,8 @@ class TestBstMin(unittest.TestCase):
 
 
 def main():
-    # test = TestBstMin()
-    # test.test_bst_min()
+    test = TestBstMin()
+    test.test_bst_min()
     
     mytest = MyTestBstMin()
     mytest.test_bst_min()
