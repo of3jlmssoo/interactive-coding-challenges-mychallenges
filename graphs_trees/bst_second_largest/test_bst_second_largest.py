@@ -1,9 +1,9 @@
 """ 
-			2
+			    2
 		      1
 
-			rootにrightが無い
-			rootのleft childにrigthが無い
+			# rootにrightが無い
+			# rootのleft childにrigthが無い
 			=> rootのleft childが該当(1)
 
 
@@ -59,9 +59,9 @@
 			print('3')
 			self.assertEqual(bst.find_second_largest(),node4)
 
-			rootにrightが無い
-			rootのleft childにrightがある
-			=> rootのleft childのright childが該当(4)
+			# rootにrightが無い
+			# rootのleft childにrightがある
+			# => rootのleft childのright childが該当(4)
 			(直ぐ下のサブセット)
 
 		    100
@@ -103,8 +103,9 @@
 			node3.parent = root
 			print('5')
 			self.assertEqual(bst.find_second_largest(),root)
-			rootにrightがある。
-			=> どんづまりのrightの１つ手前が該当
+
+			# rootにrightがある。
+			# => どんづまりのrightの１つ手前が該当
 
 		    5
 		  4   8
@@ -150,12 +151,12 @@
 			=> 7が該当		     
 
 
-                   50
+            50
 		4     100
 		    60
 		      70
 		        80
-　　　　　　　　　　　　　79
+　　　 　　　　　79
 
 			bst = Solution(None)
 			root = Node(50)
@@ -189,7 +190,7 @@
 		     20
 		       30
 		         31
-			   32
+   			       32
 
 			bst = Solution(None)
 			root = Node(20)
@@ -295,7 +296,7 @@ class Bst(object):
 
 
     def ls_nodes(self):
-        # if Bst.the_root == None: 
+        # if Bst.the_root == Notest_bst_second_largest.pyne: 
         #     print(f'Bst.ls_nodes No nodes available.')
         # else:
         #     Bst.the_root.ls_nodes()
@@ -319,28 +320,57 @@ class Bst(object):
         yield node.data
         yield from self.inorder(node.right)
 
-# class Solution(Bst):
-class Solution():
+class Solution(Bst):
+# class Solution():
+    def __init__(self, root):
+        self.__theRoot = root
 
     def find_second_largest(self):
         # TODO: Implement me
-        pass
+        # pass
+
+        # rootにrightが無い
+        # rootのleft childにrigthが無い
+        if self.__theRoot.right == None and self.__theRoot.left.right == None:
+            return self.__theRoot.left
+        #
+        #      5
+		#     3
+		#    2 4
+        #    
+        # # rootにrightが無い
+        # rootのleft childにrightがある
+        # => rootのleft childのright childが該当(4)
+        if self.__theRoot.right == None and (result := self.__theRoot.left.right) != None:
+            while result.right != None:
+                result = result.right
+            return result
+        #
+        # rootにrightがある。
+        # => どんづまりのrightの１つ手前が該当
+        if (result := self.__theRoot.right) != None:
+            while result.right != None:
+                result = result.right
+            return result.parent
+
+
 
 class MyTestBstSecondLargest(unittest.TestCase):
 
     def test_bst_second_largest(self):
         # bst = Solution(None)
         print('1')
-        bst = Solution()
         root = Node(2)
+        bst = Solution(root)
         node1 = Node(1)
         root.left = node1
         node1.parent = root
         root.ls_nodes()
         self.assertEqual(bst.find_second_largest(),node1)
+        del root, node1
 
-        bst = Solution(None)
         root = Node(5)
+        bst = Solution(root)
         node4 = Node(4)
         node3 = Node(3)
         node2 = Node(2)
@@ -352,12 +382,13 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node1.parent = node2
         node2.parent = node3
         node3.parent = node4
-        node4.parent = node5
+        node4.parent = root
         print('2')
         self.assertEqual(bst.find_second_largest(),node4)
+        del root, node4, node3, node2, node1
 
-        bst = Solution(None)
         root = Node(5)
+        bst = Solution(root)
         node4 = Node(4)
         node3 = Node(3)
         node2 = Node(2)
@@ -365,13 +396,14 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node3.left = node2
         node3.right = node4
         node2.parent = node3
-        node3.parent = node5
+        node3.parent = root
         node4.parent = node3
         print('3')
         self.assertEqual(bst.find_second_largest(),node4)
+        del root, node4, node3, node2
 
-        bst = Solution(None)
         root = Node(100)
+        bst = Solution(root)
         node50 = Node(50)
         node70 = Node(70)
         node60 = Node(60)
@@ -386,14 +418,17 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node50.parent = root
         print('4')
         self.assertEqual(bst.find_second_largest(),node80)
+        del root, node50, node70, node60, node80
 
         root = Node(2)
+        bst = Solution(root)
         node1 = Node(1)
         node3 = Node(3)
         root.left = node1
         root.right = node3
         node1.parent = root
         node3.parent = root
+        # root.ls_nodes()
         print('5')
         self.assertEqual(bst.find_second_largest(),root)
 
