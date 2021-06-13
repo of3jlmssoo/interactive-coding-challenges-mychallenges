@@ -351,7 +351,11 @@ class Solution(Bst):
         if (result := self.__theRoot.right) != None:
             while result.right != None:
                 result = result.right
-            return result.parent
+            # return result.parent
+            if result.right == None and result.left == None:
+                return result.parent
+            else:
+                return result.left
 
 
 
@@ -431,26 +435,32 @@ class MyTestBstSecondLargest(unittest.TestCase):
         # root.ls_nodes()
         print('5')
         self.assertEqual(bst.find_second_largest(),root)
+        del root, node1, node3
 
-        bst = Solution(None)
         root = Node(5)
+        bst = Solution(root)
         node4 = Node(4)
         node8 = Node(8)
         node7 = Node(7)
         node9 = Node(9)
         root.left = node4
         root.right = node8
-        node4.left = node7
-        node4.right = node9
+        # node4.left = node7
+        # node4.right = node9
+        # node4.parent = root
+        node8.left = node7
+        node8.right = node9
+
         node4.parent = root
         node8.parent = root
         node7.parent = node8
         node9.parent = node8
         print('6')
         self.assertEqual(bst.find_second_largest(),node8)
+        del root, node4, node8, node7, node9
 
-        bst = Solution(None)
         root = Node(5)
+        bst = Solution(root)
         node4 = Node(4)
         node7 = Node(7)
         node8 = Node(8)
@@ -459,13 +469,15 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node8.left = node7
         node4.parent = root
         node8.parent = root
-        node7.parent = node9
+        node7.parent = node8
+        # root.ls_nodes()
         print('7')
         self.assertEqual(bst.find_second_largest(),node7)
+        del root, node4, node7, node8
 
 
-        bst = Solution(None)
         root = Node(50)
+        bst = Solution(root)
         node4 = Node(4)
         node100 = Node(100)
         node60 = Node(60)
@@ -484,6 +496,7 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node60.parent = node100
         node4.parent = root
         node100.parent = root
+        root.ls_nodes()
         print('8')
         self.assertEqual(bst.find_second_largest(),node80)
 
