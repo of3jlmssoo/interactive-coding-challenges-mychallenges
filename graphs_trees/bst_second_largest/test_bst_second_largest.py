@@ -351,11 +351,14 @@ class Solution(Bst):
         if (result := self.__theRoot.right) != None:
             while result.right != None:
                 result = result.right
-            # return result.parent
             if result.right == None and result.left == None:
                 return result.parent
-            else:
+            elif result.left.right == None:
                 return result.left
+            else:
+                while result.right:
+                    result = result.right
+                return result
 
 
 
