@@ -356,6 +356,7 @@ class Solution(Bst):
             elif result.left.right == None:
                 return result.left
             else:
+                result = result.left
                 while result.right:
                     result = result.right
                 return result
