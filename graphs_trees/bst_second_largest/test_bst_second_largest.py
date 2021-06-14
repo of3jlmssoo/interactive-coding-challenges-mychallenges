@@ -1,4 +1,6 @@
 """ 
+デフォルトのテストはツリーの構成が2つのみ。この2つ以外にもパターンがあると考え以下のパターンに対応するものを作成。
+
 			    2
 		      1
 
@@ -209,9 +211,22 @@
 			rootにrightがある
 			rightがあり続ける
 			=> 最後のrightのparentが該当(31)
+
+=======================================================================================
+
+                 10
+              5       15
+           3   8    12  20
+          2 4              30
+
+
+               10
+              5
+             3 7
 """
-import unittest
 import logging
+import unittest
+from typing import Type
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
@@ -222,7 +237,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 
 class Node(object):
@@ -248,7 +263,15 @@ class Node(object):
         else:
             for n in Node.nodes:
                 logger.debug(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
+                # print(f'Node.ls_nodes: ',n.data, n, n.left, n.right, n.parent) 
 
+    def return_node_by_data(self, data):
+        # for n in Node.nodes:
+        #     print("== ", n.data, n)
+        return [n for n in Node.nodes if n.data==data][0]
+
+    def clear_nodes(self):
+        Node.nodes = []
 
 class Bst(object):
 
@@ -257,6 +280,11 @@ class Bst(object):
     def __init__(self):
         logger.debug(f'Bst.__init___ called. ')
         self.__theRoot = None
+
+    def clear_nodes(self):
+        for n in self.__theRoot.nodes:
+            del n
+        self.__theRoot.clear_nodes()
 
     def insert(self, data):
     # ・Bst.insert
@@ -287,7 +315,7 @@ class Bst(object):
         if current_node.data < node.data:
             if current_node.right == None:
                 current_node.right = node
-                node.parenet = current_node
+                node.parent = current_node
             elif isinstance(current_node.right, Node):
                 current_node = current_node.right
                 self.__insertIntoTree(current_node, node)
@@ -296,20 +324,15 @@ class Bst(object):
 
 
     def ls_nodes(self):
-        # if Bst.the_root == Notest_bst_second_largest.pyne: 
-        #     print(f'Bst.ls_nodes No nodes available.')
-        # else:
-        #     Bst.the_root.ls_nodes()
         if self.__theRoot == None: 
             print(f'Bst.ls_nodes No nodes available.')
         else:
             self.__theRoot.ls_nodes()
 
+    def return_node_by_data(self,data):
+        return self.__theRoot.return_node_by_data(data)
+
     def in_order_traversal(self):
-        # print(
-        #     [i for i in self.inorder(Bst.the_root) ]
-        # )
-        # return    [i for i in self.inorder(Bst.the_root) ]
         return    [i for i in self.inorder(self.__theRoot) ]
 
     def inorder(self, node):
@@ -320,6 +343,8 @@ class Bst(object):
         yield node.data
         yield from self.inorder(node.right)
 
+
+
 class Solution(Bst):
 # class Solution():
     def __init__(self, root):
@@ -328,6 +353,8 @@ class Solution(Bst):
     def find_second_largest(self):
         # TODO: Implement me
         # pass
+
+        if self.__theRoot == None: raise TypeError(f'Solution.first_second_largest TypeError')
 
         # rootにrightが無い
         # rootのleft childにrigthが無い
@@ -367,14 +394,16 @@ class MyTestBstSecondLargest(unittest.TestCase):
 
     def test_bst_second_largest(self):
         # bst = Solution(None)
-        print('1')
         root = Node(2)
         bst = Solution(root)
         node1 = Node(1)
         root.left = node1
         node1.parent = root
         root.ls_nodes()
+        print('my test 1', end='')
         self.assertEqual(bst.find_second_largest(),node1)
+        print(' completed')
+        root.clear_nodes()
         del root, node1
 
         root = Node(5)
@@ -391,8 +420,10 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node2.parent = node3
         node3.parent = node4
         node4.parent = root
-        print('2')
+        print('my test 2', end='')
         self.assertEqual(bst.find_second_largest(),node4)
+        print(' completed')
+        root.clear_nodes()
         del root, node4, node3, node2, node1
 
         root = Node(5)
@@ -406,8 +437,10 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node2.parent = node3
         node3.parent = root
         node4.parent = node3
-        print('3')
+        print('my test 3', end='')
         self.assertEqual(bst.find_second_largest(),node4)
+        print(' completed')
+        root.clear_nodes()
         del root, node4, node3, node2
 
         root = Node(100)
@@ -424,8 +457,10 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node60.parent = node70
         node70.parent = node50
         node50.parent = root
-        print('4')
+        print('my test 4', end='')
         self.assertEqual(bst.find_second_largest(),node80)
+        print(' completed')
+        root.clear_nodes()
         del root, node50, node70, node60, node80
 
         root = Node(2)
@@ -437,8 +472,10 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node1.parent = root
         node3.parent = root
         # root.ls_nodes()
-        print('5')
+        print('my test 5', end='')
         self.assertEqual(bst.find_second_largest(),root)
+        print(' completed')
+        root.clear_nodes()
         del root, node1, node3
 
         root = Node(5)
@@ -449,9 +486,6 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node9 = Node(9)
         root.left = node4
         root.right = node8
-        # node4.left = node7
-        # node4.right = node9
-        # node4.parent = root
         node8.left = node7
         node8.right = node9
 
@@ -459,8 +493,10 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node8.parent = root
         node7.parent = node8
         node9.parent = node8
-        print('6')
+        print('my test 6', end='')
         self.assertEqual(bst.find_second_largest(),node8)
+        print(' completed')
+        root.clear_nodes()
         del root, node4, node8, node7, node9
 
         root = Node(5)
@@ -475,8 +511,10 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node8.parent = root
         node7.parent = node8
         # root.ls_nodes()
-        print('7')
+        print('my test 7', end='')
         self.assertEqual(bst.find_second_largest(),node7)
+        print(' completed')
+        root.clear_nodes()
         del root, node4, node7, node8
 
 
@@ -500,12 +538,15 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node60.parent = node100
         node4.parent = root
         node100.parent = root
-        root.ls_nodes()
-        print('8')
+        # root.ls_nodes()
+        print('my test 8', end='')
         self.assertEqual(bst.find_second_largest(),node80)
+        print(' completed')
+        root.clear_nodes()
+        del root, node4, node100, node60, node70, node80, node79
 
-        bst = Solution(None)
         root = Node(20)
+        bst = Solution(root)
         node30 = Node(30)
         node31 = Node(31)
         node32 = Node(32)
@@ -515,39 +556,77 @@ class MyTestBstSecondLargest(unittest.TestCase):
         node32.parent = node31
         node31.parent = node30
         node30.parent = root
-        print('9')
+        # root.ls_nodes()
+        print('my test 9', end='')
         self.assertEqual(bst.find_second_largest(),node31)
+        print(' completed')
+        root.clear_nodes()
+        del root, node30, node31, node32
 
 
 class TestBstSecondLargest(unittest.TestCase):
 
     def test_bst_second_largest(self):
-        bst = Solution(None)
-        self.assertRaises(TypeError, bst.find_second_largest)
-        root = Node(10)
-        bst = Solution(root)
-        node5 = bst.insert(5)
-        node15 = bst.insert(15)
-        node3 = bst.insert(3)
-        node8 = bst.insert(8)
-        node12 = bst.insert(12)
-        node20 = bst.insert(20)
-        node2 = bst.insert(2)
-        node4 = bst.insert(4)
-        node30 = bst.insert(30)
-        self.assertEqual(bst.find_second_largest(), node20)
-        root = Node(10)
-        bst = Solution(root)
-        node5 = bst.insert(5)
-        node3 = bst.insert(3)
-        node7 = bst.insert(7)
-        self.assertEqual(bst.find_second_largest(), node7)
-        print('Success: test_bst_second_largest')
+        sol = Solution(None)
+        self.assertRaises(TypeError, sol.find_second_largest)
+
+
+
+        # root = Node(10)
+        # bst = Solution(root)
+        # node5 = bst.insert(5)
+        # node15 = bst.insert(15)
+        # node3 = bst.insert(3)
+        # node8 = bst.insert(8)
+        # node12 = bst.insert(12)
+        # node20 = bst.insert(20)
+        # node2 = bst.insert(2)
+        # node4 = bst.insert(4)
+        # node30 = bst.insert(30)
+        # self.assertEqual(bst.find_second_largest(), node20)
+
+
+        # root = Node(10)
+        # bst = Solution(root)
+        # node5 = bst.insert(5)
+        # node3 = bst.insert(3)
+        # node7 = bst.insert(7)
+
+        bst = Bst()
+        bst.insert(10)
+        bst.insert(5)
+        bst.insert(15)
+        bst.insert(3)
+        bst.insert(8)
+        bst.insert(12)
+        bst.insert(20)
+        bst.insert(2)
+        bst.insert(4)
+        bst.insert(30)
+        # bst.ls_nodes()
+        sol = Solution(bst.return_node_by_data(10))
+        self.assertEqual(sol.find_second_largest(), bst.return_node_by_data(20))
+        bst.clear_nodes()
+        del bst
+        del sol
+        print('Success: test_bst_second_largest 1')
+
+        bst = Bst()
+        bst.insert(10)
+        bst.insert(5)
+        bst.insert(3)
+        bst.insert(7)
+        bst.ls_nodes()
+        sol = Solution(bst.return_node_by_data(10))
+        self.assertEqual(sol.find_second_largest(), bst.return_node_by_data(7))
+        bst.clear_nodes()
+        del bst, sol
+        print('Success: test_bst_second_largest 2')
 
 
 def main():
-    # test = TestBstSecondLargest()
-    # test.test_bst_second_largest()
+    test = TestBstSecondLargest()
+    test.test_bst_second_largest()
 
     mytest = MyTestBstSecondLargest()
     mytest.test_bst_second_largest()
