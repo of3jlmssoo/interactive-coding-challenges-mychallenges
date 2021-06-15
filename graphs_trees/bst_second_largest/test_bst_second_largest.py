@@ -306,7 +306,7 @@ class Bst(object):
         if current_node.data > node.data:
             if current_node.left == None:
                 current_node.left = node
-                node.parenet = current = node
+                node.parent = current_node
             elif isinstance(current_node.left, Node):
                 current_node = current_node.left
                 self.__insertIntoTree(current_node, node)

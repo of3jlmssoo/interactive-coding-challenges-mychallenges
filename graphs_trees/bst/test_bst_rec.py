@@ -26,7 +26,7 @@ def Bst.__insert(current_node, node):
     if current_node.data > node.data
         if current.node.left == None:
             current_node.left = node
-            node.parenet = current = node
+            node.parent = current_node
         elif isinstance(current_node.node.left, Node):
             current_node = current_node.left
             Bst.__insert(current_node, node)
@@ -35,7 +35,7 @@ def Bst.__insert(current_node, node):
     if current_node.data < node.data):
         if current_node.node.right == None:
             current_node.right = node
-            node.parenet = current = node
+            node.parent = current_node
         elif isinstance(current_node.node.right, Node):
             current_node = current_node.right
             Bst.__insert(current_node, node)
@@ -45,13 +45,13 @@ def Bst.__insert(current_node, node):
 def Bst.__insert(current_node, node):
     (current_node.data > node.data) & current.node.left == None 
         current_node.left = node
-        node.parenet = current = node
+        node.parent = current_node
     (current_node.data > node.data) & current_node.node.left <> None
         current_node = current_node.left
         Bst.__insert(current_node, node)
     (current_node.data < node.data) & current_node.node.right == None
         current_node.right = node
-        node.parenet = current = node
+        node.parent = current_node
     (current_node.data < node.data) & current_node.node.right <> None
         current_node = current_node.right
         Bst.__insert(current_node, node)
@@ -126,7 +126,7 @@ class Bst(object):
         if current_node.data > node.data:
             if current_node.left == None:
                 current_node.left = node
-                node.parenet = current = node
+                node.parent = current_node
             elif isinstance(current_node.left, Node):
                 current_node = current_node.left
                 self.__insertIntoTree(current_node, node)
@@ -135,7 +135,7 @@ class Bst(object):
         if current_node.data < node.data:
             if current_node.right == None:
                 current_node.right = node
-                node.parenet = current_node
+                node.parent = current_node
             elif isinstance(current_node.right, Node):
                 current_node = current_node.right
                 self.__insertIntoTree(current_node, node)
