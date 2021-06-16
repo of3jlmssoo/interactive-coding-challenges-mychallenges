@@ -1,5 +1,5 @@
-import unittest
 import logging
+import unittest
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
@@ -34,8 +34,8 @@ class Node(object):
             print(f'Node.ls_nodes No node available.')
         else:
             for n in Node.nodes:
-                # logger.debug(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
-                print(f'Node.ls_nodes: ',n.data, n, n.left, n.right, n.parent) 
+                logger.debug(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
+                # print(f'Node.ls_nodes: ',n.data, n, n.left, n.right, n.parent) 
 
     def return_node_by_data(self, data):
         # for n in Node.nodes:
@@ -80,7 +80,6 @@ class Bst(object):
             if current_node.left == None:
                 current_node.left = node
                 node.parent = current_node
-                print("==== current_node", current_node, " node.data:",node.data)
             elif isinstance(current_node.left, Node):
                 current_node = current_node.left
                 self.__insertIntoTree(current_node, node)
@@ -98,11 +97,9 @@ class Bst(object):
 
 
     def ls_nodes(self):
-        print("========================")
         if self.__theRoot == None: 
             print(f'Bst.ls_nodes No nodes available.')
         else:
-            print("========================", self.__theRoot)
             self.__theRoot.ls_nodes()
 
     def return_node_by_data(self,data):
@@ -119,6 +116,45 @@ class Bst(object):
         yield node.data
         yield from self.inorder(node.right)
 
+
+class BstSuccessor(object):
+
+    def follow_right(self, node):
+        logger.debug(f'BstSuccessor.follow_right node:{node}')
+        while node.right!=None:
+            node = node.right
+        return node.data
+
+    def follow_left(self, node):
+        logger.debug(f'BstSuccessor.follow_left node:{node}')
+        while node.left!=None:
+            node = node.left
+        return node.data
+
+    def get_next(self, node):
+        # TODO: Implement me
+        # pass
+        logger.debug(f'BstSuccessor.get_next called. node:{node}')
+        if node == None: raise TypeError(f'BstSuccessor.get_next. Type Error. None specified')
+
+        if node.right != None and node.right.left == None: return node.right.data
+        if node.right != None and node.right.left != None: return self.follow_left(node.right.left)
+
+        data=node.data
+        i=0
+        logger.debug(f'BstSuccessor.get_next before while data:{data}, node.data:{node.data}, node:{node} , node.parent.data:{node.parent.data}')
+        while node.parent != None and node.parent.data < data:
+            logger.debug(f'BstSuccessor.get_next in while data:{data}, node.parent:{node.parent}, node.parent.data:{node.parent.data}')
+            node = node.parent
+            i+=1
+            if i>100: break
+        logger.debug(f'BstSuccessor.get_next after while node:{node}, node.parent:{node.parent}')
+        if node.parent != None: 
+            return node.parent.data
+        else: 
+            return None
+
+        # return node.parent.data
 class MyTestBstSuccessor(unittest.TestCase):
 
     def test_bst_successor(self):
@@ -143,35 +179,19 @@ class MyTestBstSuccessor(unittest.TestCase):
         bst_successor = BstSuccessor()
         self.assertEqual(bst_successor.get_next(nodes[4]), 5)
         self.assertEqual(bst_successor.get_next(nodes[5]), 6)
-        # self.assertEqual(bst_successor.get_next(nodes[8]), 9)
-        # self.assertEqual(bst_successor.get_next(nodes[15]), None)
+        self.assertEqual(bst_successor.get_next(nodes[8]), 9)
+        self.assertEqual(bst_successor.get_next(nodes[15]), None)
+
+        self.assertEqual(bst_successor.get_next(nodes[1]), 2)
+        self.assertEqual(bst_successor.get_next(nodes[2]), 3)
+        self.assertEqual(bst_successor.get_next(nodes[3]), 4)
+        self.assertEqual(bst_successor.get_next(nodes[6]), 7)
+        self.assertEqual(bst_successor.get_next(nodes[7]), 8)
+        self.assertEqual(bst_successor.get_next(nodes[9]), 10)
+        self.assertEqual(bst_successor.get_next(nodes[10]), 12)
+        self.assertEqual(bst_successor.get_next(nodes[12]), 15)
 
         print('Success: my_test_bst_successor')
-
-class BstSuccessor(object):
-
-    def follow_right(self, node):
-        while node.right!=None:
-            node = node.right
-        return node.data
-
-    def get_next(self, node):
-        # TODO: Implement me
-        # pass
-        if node == None: raise TypeError(f'BstSuccessor.get_next. Type Error. None specified')
-
-        if node.right != None and node.right.left == None: return node.right.data
-        if node.right != None and node.right.left != None: self.follow_right(node.right.left)
-
-        data=node.data
-        i=0
-        logger.debug(f'BstSuccessor.get_next before while data:{data}, node.data:{node.data}, node:{node}, node.parent.data:{node.parent.data}')
-        while node.parent != None and node.parent.data < data:
-            logger.debug(f'BstSuccessor.get_next in while data:{data}, node.parent:{node.parent}, node.parent.data:{node.parent.data}')
-            node = node.parent
-            i+=1
-        logger.debug(f'BstSuccessor.get_next after while node:{node}, node.parent:{node.parent}')
-        return node.parent.data
 
 
 
@@ -200,17 +220,17 @@ class TestBstSuccessor(unittest.TestCase):
         nodes[9] = bst.insert(9)
 
         bst_successor = BstSuccessor()
-        # self.assertEqual(bst_successor.get_next(nodes[4]), 5)
-        # self.assertEqual(bst_successor.get_next(nodes[5]), 6)
-        # self.assertEqual(bst_successor.get_next(nodes[8]), 9)
-        # self.assertEqual(bst_successor.get_next(nodes[15]), None)
+        self.assertEqual(bst_successor.get_next(nodes[4]), 5)
+        self.assertEqual(bst_successor.get_next(nodes[5]), 6)
+        self.assertEqual(bst_successor.get_next(nodes[8]), 9)
+        self.assertEqual(bst_successor.get_next(nodes[15]), None)
 
         print('Success: test_bst_successor')
 
 
 def main():
     test = TestBstSuccessor()
-    # test.test_bst_successor()
+    test.test_bst_successor()
     test.assertRaises(TypeError, test.test_bst_successor_empty)
 
     mytest = MyTestBstSuccessor()
