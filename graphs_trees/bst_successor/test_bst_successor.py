@@ -1,3 +1,44 @@
+"""
+successorの定義を以下のようにする。
+- 指定されたノードよりも値が大きく
+- かつ、差が一番小さいノード
+例では4&5、5&6、8&9と差が1のみだが1以外もありえるものとする。
+
+[初期検討]
+successorは、
+左側の場合、
+	(1) 優先:当該ノード右下の方で一番小さいノード 	if thenode.right != None
+	(2) 当該ノードの親ノード						if thenode.right == None
+	(1)が優先される理由
+	・自分よりも大きく、かつ、親ノードよりも大きい場合親ノードの右に位置付けられ、当該ノードの右グループに属することは無い
+	・自分よりも大きいが親ノードよりも小さい場合、まず親ノードの左に位置付けられ、その後当該ノードとの比較において、当該ノードよりも大きいことから当該ノードの右グループに位置付けられる。
+	  複数ある可能性もあるので一番小さいノードを探すことになる
+
+右側の場合、
+	(a) if thenode.right == None: return None
+	(b) if thenode.right != None and if thenode.right.left == None: then suuccessor is thenode.right
+	(c) if thenode.right != None and if thenode.right.left != None: search the minimum value in thenode.right.left group
+
+右下で一番小さいノードを探す
+    thenode.right.left以降でrightのどん詰りがsuccessor
+
+[コーディング前]
+実際のテストコードを見ると、rootを基準にしないことが求められているように思えるので、左右分割案はやめる。
+if node.right != None and if node.right.left == None: return node.right
+if node.right != None and if node.right.left != None: return follow_left(node.right.left)
+
+data=node.data
+i=0
+while node.parent != None and node.parent.data < data:
+	node = node.parent
+	i+=1
+return node.parent
+
+def follow_left(node):
+	while node.left!=None:
+		node = node.left
+	return node
+"""
 import logging
 import unittest
 
@@ -119,11 +160,11 @@ class Bst(object):
 
 class BstSuccessor(object):
 
-    def follow_right(self, node):
-        logger.debug(f'BstSuccessor.follow_right node:{node}')
-        while node.right!=None:
-            node = node.right
-        return node.data
+    # def follow_right(self, node):
+    #     logger.debug(f'BstSuccessor.follow_right node:{node}')
+    #     while node.right!=None:
+    #         node = node.right
+    #     return node.data
 
     def follow_left(self, node):
         logger.debug(f'BstSuccessor.follow_left node:{node}')
