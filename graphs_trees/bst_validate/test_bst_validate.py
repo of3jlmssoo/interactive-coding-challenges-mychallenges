@@ -10,7 +10,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 class Node(object):
 
@@ -70,60 +70,28 @@ class Bst(object):
         # else:
         #     self.__insertIntoTree(self.theRoot, node)
         self.__insertIntoTree(self.theRoot, node)
-        if self.theRoot == node: print(f'self.theRoot == node')
-        if node.data == 7: print(f'=-=- node.left:{node.left} node.right:{node.right}')
         return node
     # ・insert_into_tree(ツリー上の既存ノード, 今回のノード)
     # ・引数の両ノードのdataを比較して、ツリー上の既存ノードのleftかrightを選ぶ
     # ・left or rightがNoneであればこのツリー上の既存ノードを今回のノードの親ノードに設定する
     # ・left or rightに別のノードが設定されている場合insert_into_tree(別のノード, 今回のノード)で再帰呼出し
     def __insertIntoTree(self, current_node, node):
-        print(f'__insertIntoTree called {current_node}, {node} and {current_node.data}, {node.data}')
-        tmpnode = None
         if current_node.data >= node.data:
-            print(f" === 1 === current_node.data:{current_node.data}, node.data:{node.data}")
-            if tmpnode != None: print(f'### {tmpnode.left}')
-            print(" === 1 === ")
             if current_node.left == None:
-                print(f" === 2 === current_node.left:{current_node.left}")
-                if tmpnode != None: print(f'### {tmpnode.left}')
-                if node.data == 7: print(f'why why')
-                print(" === 2 ===  ")
                 current_node.left = node
                 node.parent = current_node
             elif isinstance(current_node.left, Node):
-                print(" === 3 === ")
-                if tmpnode != None: print(f'### {tmpnode.left}')
-                print(" === 3 === ")
                 current_node = current_node.left
-                if current_node == node: print(f'(1) self.theRoot == node')
-                print(f"i will go to new world at 2       current_node.data:{current_node.data}, node.data:{node.data}")
                 self.__insertIntoTree(current_node, node)
-                print("I returned at 1")
             else:
                 print(f'Bst.__insertIntoTree 1 : something wrong current_node:{current_node}, node:{node}')
         elif current_node.data < node.data:
-            if node.data == 7: tmpnode = node
-            print(f" === 4 === current_node.data:{current_node.data}, node.data:{node.data}")
-            if tmpnode != None: print(f'### {tmpnode.left}')
-            print(f" === 4 === current_node.data:{current_node.data}, node.data:{node.data}")
             if current_node.right == None:
-                print(" === 5 === ")
-                if tmpnode != None: print(f'### {tmpnode.left}')
-                print(" === 5 === ")
                 current_node.right = node
                 node.parent = current_node
-                if node.data == 7:
-                    print(f'--------------{node.data},{node}, {node.left}, {node.right}')
             elif isinstance(current_node.right, Node):
-                print(f" === 6 === current_node.right:{current_node.right}")
-                if tmpnode != None: print(f'### {tmpnode.left}')
-                print(f" === 6 === current_node.right:{current_node.right}")
                 current_node = current_node.right
-                if current_node == node: print(f'(2) self.theRoot == node')
-                print(f"i will go to new world at           2current_node.data:{current_node.data}, node.data:{node.data}")
                 self.__insertIntoTree(current_node, node)
-                print("I returned at 2")
             else:
                 print(f'Bst.__insertIntoTree 2 : something wrong current_node:{current_node}, node:{node}')
 
@@ -169,8 +137,7 @@ class TestBstValidate(unittest.TestCase):
         bst.insert(6)
         bst.insert(4)
         node7 = bst.insert(7)
-        print(f'---------->>> {node7}, {node7.data}, {node7.left}, {node7.right}, {node7.parent},')
-        bst.ls_nodes()
+        # bst.ls_nodes()
         # self.assertEqual(bst.validate(), True)
         print('Success: test_bst_validate(first part)')
 
