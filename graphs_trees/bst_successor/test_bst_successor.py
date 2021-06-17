@@ -126,7 +126,7 @@ class Bst(object):
                 self.__insertIntoTree(current_node, node)
             else:
                 print(f'Bst.__insertIntoTree 1 : something wrong current_node:{current_node}, node:{node}')
-        if current_node.data < node.data:
+        elif current_node.data < node.data:
             if current_node.right == None:
                 current_node.right = node
                 node.parent = current_node

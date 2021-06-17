@@ -132,7 +132,7 @@ class Bst(object):
                 self.__insertIntoTree(current_node, node)
             else:
                 print(f'Bst.__insertIntoTree 1 : something wrong current_node:{current_node}, node:{node}')
-        if current_node.data < node.data:
+        elif current_node.data < node.data:
             if current_node.right == None:
                 current_node.right = node
                 node.parent = current_node
@@ -209,7 +209,6 @@ class TestTree(unittest.TestCase):
         bst.insert(8)
         bst.insert(1)
         bst.insert(3)
-        
         logger.debug(f'ls_nodes() {bst.ls_nodes()}')
 
         # in_order_traversal(bst.root, self.results.add_result)
