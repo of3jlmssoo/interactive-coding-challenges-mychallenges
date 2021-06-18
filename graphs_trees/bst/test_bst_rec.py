@@ -153,12 +153,9 @@ class Bst(object):
         else:
             self.__theRoot.ls_nodes()
 
-    def in_order_traversal(self):
-        # print(
-        #     [i for i in self.inorder(Bst.the_root) ]
-        # )
-        # return    [i for i in self.inorder(Bst.the_root) ]
-        return    [i for i in self.inorder(self.__theRoot) ]
+    def in_order_traversal(self, node=None):
+        if node==None: node=self.__theRoot
+        return    [i for i in self.inorder(node) ]
 
     def inorder(self, node):
         if not isinstance(node,Node):

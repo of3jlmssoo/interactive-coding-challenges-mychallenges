@@ -1,3 +1,12 @@
+""" test_bst_validate.py
+
+result 
+ルートノードの場合
+    (node.left < node.data) and (node.right > node.data)であるはず
+ルートノード以外の場合
+
+
+"""
 import logging
 import unittest
 
@@ -105,8 +114,11 @@ class Bst(object):
     def return_node_by_data(self,data):
         return self.theRoot.return_node_by_data(data)
 
-    def in_order_traversal(self):
-        return    [i for i in self.inorder(self.theRoot) ]
+    # def in_order_traversal(self):
+    #     return    [i for i in self.inorder(self.theRoot) ]
+    def in_order_traversal(self, node=None):
+        if node==None: node=self.theRoot
+        return    [i for i in self.inorder(node)]
 
     def inorder(self, node):
         if not isinstance(node,Node):
@@ -123,7 +135,12 @@ class BstValidate(Bst):
         # TODO: Implement me
         # pass
         if self.theRoot == None: raise TypeError(f'TypeError the tree is empty.')
-        
+        result = 0; # 0 is valid
+
+        print( self.in_order_traversal())
+        print( self.in_order_traversal(self.theRoot.left))
+        print( self.in_order_traversal(self.theRoot.right))
+
 class TestBstValidate(unittest.TestCase):
 
     def test_bst_validate_empty(self):
@@ -138,6 +155,8 @@ class TestBstValidate(unittest.TestCase):
         bst.insert(4)
         node7 = bst.insert(7)
         # bst.ls_nodes()
+        print("bst.validate():",bst.validate())
+
         # self.assertEqual(bst.validate(), True)
         print('Success: test_bst_validate(first part)')
 

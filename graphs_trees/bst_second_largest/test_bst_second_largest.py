@@ -332,8 +332,9 @@ class Bst(object):
     def return_node_by_data(self,data):
         return self.__theRoot.return_node_by_data(data)
 
-    def in_order_traversal(self):
-        return    [i for i in self.inorder(self.__theRoot) ]
+    def in_order_traversal(self, node=None):
+        if node==None: node=self.__theRoot  
+        return    [i for i in self.inorder(node)]
 
     def inorder(self, node):
         if not isinstance(node,Node):
