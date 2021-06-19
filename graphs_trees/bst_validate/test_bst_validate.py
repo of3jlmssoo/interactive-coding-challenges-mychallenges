@@ -44,7 +44,7 @@ class Node(object):
         else:
             for n in Node.nodes:
                 logger.debug(f'Node.ls_nodes(1) {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
-                # print(f'Node.ls_nodes(2): ',n.data, n, n.left, n.right, n.parent) 
+                print(f'Node.ls_nodes(2): ',n.data, n, n.left, n.right, n.parent) 
 
     def return_node_by_data(self, data):
         # for n in Node.nodes:
