@@ -82,7 +82,9 @@ class Graph:
 
     def add_undirected_edge(self, source, dest, weight=0):
         # TODO: Implement me
-        pass
+        # pass
+        self.add_edge(source, dest, weight)
+        self.add_edge(dest, source, weight)
 
     def __repr__(self):
         return str(self.nodes)
@@ -143,18 +145,18 @@ class TestGraph(unittest.TestCase):
         print('Success: test_graph')
 
     def test_graph_undirected(self):
-        pass
-    #     graph = self.create_graph()
-    #     graph.add_undirected_edge(0, 1, weight=5)
-    #     graph.add_undirected_edge(0, 5, weight=2)
-    #     graph.add_undirected_edge(1, 2, weight=3)
+        # pass
+        graph = self.create_graph()
+        graph.add_undirected_edge(0, 1, weight=5)
+        graph.add_undirected_edge(0, 5, weight=2)
+        graph.add_undirected_edge(1, 2, weight=3)
 
-    #     self.assertEqual(graph.nodes[0].adj_weights[graph.nodes[1].key], 5)
-    #     self.assertEqual(graph.nodes[1].adj_weights[graph.nodes[0].key], 5)
-    #     self.assertEqual(graph.nodes[0].adj_weights[graph.nodes[5].key], 2)
-    #     self.assertEqual(graph.nodes[5].adj_weights[graph.nodes[0].key], 2)
-    #     self.assertEqual(graph.nodes[1].adj_weights[graph.nodes[2].key], 3)
-    #     self.assertEqual(graph.nodes[2].adj_weights[graph.nodes[1].key], 3)
+        self.assertEqual(graph.nodes[0].adj_weights[graph.nodes[1].key], 5)
+        self.assertEqual(graph.nodes[1].adj_weights[graph.nodes[0].key], 5)
+        self.assertEqual(graph.nodes[0].adj_weights[graph.nodes[5].key], 2)
+        self.assertEqual(graph.nodes[5].adj_weights[graph.nodes[0].key], 2)
+        self.assertEqual(graph.nodes[1].adj_weights[graph.nodes[2].key], 3)
+        self.assertEqual(graph.nodes[2].adj_weights[graph.nodes[1].key], 3)
 
         print('Success: test_graph_undirected')
 
