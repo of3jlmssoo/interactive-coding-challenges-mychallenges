@@ -16,7 +16,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 class State(Enum):
 
@@ -49,7 +49,9 @@ class Node:
 
     def remove_neighbor(self, neighbor):
         # TODO: Implement me
-        pass
+        # pass
+        self.adj_nodes.pop(neighbor.key)
+        neighbor.incoming_edges -= 1
 
     def list_node(self):
         return self.key, self.visit_state, self.incoming_edges, self.adj_nodes, self.adj_weights
@@ -131,14 +133,14 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(graph.nodes[4].incoming_edges, 2)
         self.assertEqual(graph.nodes[5].incoming_edges, 2)
 
-    #     graph.nodes[0].remove_neighbor(graph.nodes[1])
-    #     self.assertEqual(graph.nodes[1].incoming_edges, 0)
-    #     graph.nodes[3].remove_neighbor(graph.nodes[4])
-    #     self.assertEqual(graph.nodes[4].incoming_edges, 1)
+        graph.nodes[0].remove_neighbor(graph.nodes[1])
+        self.assertEqual(graph.nodes[1].incoming_edges, 0)
+        graph.nodes[3].remove_neighbor(graph.nodes[4])
+        self.assertEqual(graph.nodes[4].incoming_edges, 1)
 
-    #     self.assertEqual(graph.nodes[0] < graph.nodes[1], True)
+        self.assertEqual(graph.nodes[0] < graph.nodes[1], True)
 
-    #     print('Success: test_graph')
+        print('Success: test_graph')
 
     def test_graph_undirected(self):
         pass
