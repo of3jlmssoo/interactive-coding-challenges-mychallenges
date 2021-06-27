@@ -6,8 +6,6 @@ from test_graph import Graph
 from test_graph import State
 from collections import deque
 
-
-
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -82,20 +80,30 @@ class BuildOrder(object):
         ['d', 'f', 'g', 'c', 'b', 'a', 'e']
 
         .keyアクセスが必要なので、class node_key()を定義した上でself.__processed_nodesへ変換して保管
+
+        self.__groupNode: [[['d', 'g']], [['f', 'c'], ['f', 'b'], ['f', 'a'], ['c', 'a'], ['b', 'a'], ['a', 'e'], ['b', 'e'], ['e', 'f']]]
+        d系列とf系列の2つの系列がある。d系列の長さは1でf系列の長さは8。lにminの1がセットされる(l=1)
+        重なっている部分(d系列[0]とf系列[0])はキャラクターの順番に注意が必要。
+        長いf系列のf系列[l:]は出てきた順番にセットする
         """
         l = min([len(l) for l in self.__groupNode])
         for i in range(l):
+            # 重なっている部分を処理
+            # 下の最初のforループ：各系列のデータのnode_key_beforeをセットする
+            # 下の2つ目のforループ：各系列のデータのnode_key_afterをセットする
             for n in self.__groupNode: 
                 if n[i][0] not in self.__processed_nodes_work: self.__processed_nodes_work.append(n[i][0])
             for n in self.__groupNode: 
                 if n[i][1] not in self.__processed_nodes_work: self.__processed_nodes_work.append(n[i][1])
         for j, longerNode in enumerate(self.__groupNode):
+            # 長い方の系列(f系列)に関し後続の未処理部分を処理
             if len(longerNode) > l:
                 for rest in self.__groupNode[j][l:]:
                     if rest[0] not in self.__processed_nodes_work: self.__processed_nodes_work.append(rest[0])
                     if rest[1] not in self.__processed_nodes_work: self.__processed_nodes_work.append(rest[1])
         # print(f'BuildOrder.process_nodes() l:{l} self.__processed_nodes:{self.__processed_nodes_work}')
         for n in self.__processed_nodes_work:
+            # 単純なキャラクターのリストを.keyアクセスできるように変換
             self.__processed_nodes.append(node_key(n))
 
         return self.__processed_nodes
