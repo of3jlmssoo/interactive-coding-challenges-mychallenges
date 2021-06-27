@@ -45,7 +45,8 @@ class Node:
         # pass
         self.adj_nodes[neighbor.key] = neighbor
         self.adj_weights[neighbor.key] = weight 
-        logger.debug(f'Node.add_neighbor neighbor:{neighbor}, weight:{weight}, neighnor.key:{neighbor.key}, self.adj_nodes[neighbor.key]:{self.adj_nodes[neighbor.key]}')
+        logger.debug(f'Node.add_neighbor self.key:{self.key}, neighbor:{neighbor}, weight:{weight}, neighnor.key:{neighbor.key}, self.adj_nodes[neighbor.key]:{self.adj_nodes[neighbor.key]}')
+        logger.debug(f'     self.incoming_edges:{self.incoming_edges}, self.adj_nodes:{self.adj_nodes}, self.adj_weights:{self.adj_weights}')
 
     def remove_neighbor(self, neighbor):
         # TODO: Implement me
