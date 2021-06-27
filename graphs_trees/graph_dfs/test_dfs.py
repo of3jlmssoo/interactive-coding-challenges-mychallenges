@@ -28,8 +28,10 @@ logger.disabled = True
 
 class GraphDfs(Graph):
 
-    def __init_subclass__(cls) -> None:
-        return super().__init_subclass__()
+    def __init__(self) -> None:
+        super().__init__()
+    # def __init_subclass__(cls) -> None:
+    #     return super().__init_subclass__()
 
     def add_node(self,id):
         super().add_node(id)
