@@ -59,10 +59,8 @@ class BuildOrder(object):
         # TODO: Implement me
         # pass
         
-        
         for n in self.__dependencies:
             self.make_work_lists(n)
-       
         # print(f'--> self.__groupStr: {self.__groupStr}')
         # print(f'==> self.__groupNode: {self.__groupNode}')
 
@@ -91,6 +89,9 @@ class BuildOrder(object):
             # 重なっている部分を処理
             # 下の最初のforループ：各系列のデータのnode_key_beforeをセットする
             # 下の2つ目のforループ：各系列のデータのnode_key_afterをセットする
+            #
+            # HACK: hack x 2
+            #
             for n in self.__groupNode: 
                 if n[i][0] not in self.__processed_nodes_work: self.__processed_nodes_work.append(n[i][0])
             for n in self.__groupNode: 
@@ -163,9 +164,7 @@ class BuildOrder(object):
     
         return 
 
-
-
-        logger.debug(f'self.__rootNodes: {self.__rootNodes}\n')
+        # logger.debug(f'self.__rootNodes: {self.__rootNodes}\n')
 
 class TestBuildOrder(unittest.TestCase):
 
