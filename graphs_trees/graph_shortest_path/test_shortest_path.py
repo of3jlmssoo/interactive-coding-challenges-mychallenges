@@ -51,6 +51,7 @@ class ShortestPath(object):
 
         """2) 開始ノードの隣接ノードのself.path_weightを更新"""
         """start_node_keyの隣接ノードのself._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
+        """self.__whoUpdated更新"""
         for adj_n in self.__graph.nodes[start_node_key].adj_nodes.values():
             self.path_weight[str(adj_n)] = self.path_weight[start_node_key] + self.__graph.nodes[start_node_key].adj_weights[str(adj_n)]
             self.__whoUpdated[str(adj_n)] = start_node_key
