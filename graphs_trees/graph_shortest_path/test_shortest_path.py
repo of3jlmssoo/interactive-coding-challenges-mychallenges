@@ -1,3 +1,9 @@
+"""
+参考にしたサイト
+https://www.codingame.com/playgrounds/1608/shortest-paths-with-dijkstras-algorithm/dijkstras-algorithm
+https://www.freecodecamp.org/news/dijkstras-shortest-path-algorithm-visual-introduction/
+
+"""
 import logging
 import unittest
 from collections import deque
