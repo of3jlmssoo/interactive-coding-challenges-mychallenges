@@ -107,9 +107,10 @@ class ShortestPath(object):
         current_node = end_node_key
         l = len(self.__whoUpdated)
 
-        while current_node!=start_node_key and l>=0:
+        while current_node!=start_node_key and l>0:
             route.append(self.__whoUpdated[current_node])
             current_node = self.__whoUpdated[current_node]
+            l-=1
         route.reverse()
         return route
 
