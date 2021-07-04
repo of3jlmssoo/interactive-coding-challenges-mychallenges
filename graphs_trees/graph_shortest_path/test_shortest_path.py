@@ -41,8 +41,6 @@ class ShortestPath(object):
         4) 残りのノードの処理
         5) start_node_keyからend_node_keyの間のノードをリストアップ
         """
-        # TODO: Implement me
-        # pass
 
         """1) 開始ノードのself.path_weightを0にセット"""
         """start_node_keyのノードを0にセット"""
