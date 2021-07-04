@@ -13,19 +13,19 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 class ShortestPath(object):
 
     def __init__(self, graph):
         # TODO: Impclement me
         # pass
-        self.__distances = {}   # {'a': 0, 'b': 4, 'c': 3, 'e': 2, 'd': 4, 'g': None, 'h': 6, 'i': 9, 'f': None} 
+        self.path_weight = {}   # {'a': 0, 'b': 4, 'c': 3, 'e': 2, 'd': 4, 'g': None, 'h': 6, 'i': 9, 'f': None} 
         self.__whoUpdated = {}  # 
         self.__graph = graph    # 対象グラフを保管
         for n in graph.nodes:
-            self.__distances[n]=float('inf')
-        logger.debug(f'ShortestPath.__init__ {self.__distances}')
+            self.path_weight[n]=float('inf')
+        logger.debug(f'ShortestPath.__init__ {self.path_weight}')
 
         for n in graph.nodes:        
             if ( graph.nodes[n].visit_state != State.unvisited ): 
@@ -35,54 +35,54 @@ class ShortestPath(object):
     def find_shortest_path(self, start_node_key, end_node_key):
         """
         5つのパート
-        1) 開始ノードのself.__distancesを0にセット
-        2) 開始ノードの隣接ノードのself.__distancesを更新
-        3) 開始のノードの隣接ノードに移動して更に先の隣接ノードのself.__distancesを更新
+        1) 開始ノードのself.path_weightを0にセット
+        2) 開始ノードの隣接ノードのself.path_weightを更新
+        3) 開始のノードの隣接ノードに移動して更に先の隣接ノードのself.path_weightを更新
         4) 残りのノードの処理
         5) start_node_keyからend_node_keyの間のノードをリストアップ
         """
         # TODO: Implement me
         # pass
 
-        """1) 開始ノードのself.__distancesを0にセット"""
+        """1) 開始ノードのself.path_weightを0にセット"""
         """start_node_keyのノードを0にセット"""
-        # if self.__distances[start_node_key] == None:
-        if self.__distances[start_node_key] == float('inf'):
-           self.__distances[start_node_key] = 0 
-        logger.debug(f'ShortestPath.find_shortest_path self.__distances:{self.__distances}')
+        # if self.path_weight[start_node_key] == None:
+        if self.path_weight[start_node_key] == float('inf'):
+           self.path_weight[start_node_key] = 0 
+        logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
         logger.debug(f'ShortestPath.find_shortest_path adj_nodes:{self.__graph.nodes[start_node_key].adj_nodes}')
 
-        """2) 開始ノードの隣接ノードのself.__distancesを更新"""
-        """start_node_keyの隣接ノードのself.___distances更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
+        """2) 開始ノードの隣接ノードのself.path_weightを更新"""
+        """start_node_keyの隣接ノードのself._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
         for adj_n in self.__graph.nodes[start_node_key].adj_nodes.values():
             # print(adj_n)
             # print(self.__graph.nodes[start_node_key].adj_weights[str(adj_n)])
-            self.__distances[str(adj_n)] = self.__distances[start_node_key] + self.__graph.nodes[start_node_key].adj_weights[str(adj_n)]
+            self.path_weight[str(adj_n)] = self.path_weight[start_node_key] + self.__graph.nodes[start_node_key].adj_weights[str(adj_n)]
             self.__whoUpdated[str(adj_n)] = start_node_key
             print("=",str(adj_n), start_node_key )
-        logger.debug(f'ShortestPath.find_shortest_path self.__distances:{self.__distances}')
+        logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
         logger.debug(f'ShortestPath.find_shortest_path self.__whoUpdated:{self.__whoUpdated}')
         """start_node_keyのノードをvisistedにセット。"""
         """self.__whoUpdatedは最初のノードなので更新しない。更新するとしたら自分の値か"""
         self.__graph.nodes[start_node_key].visit_state = State.visited
         logger.debug(f'ShortestPath.find_shortest_path node:{start_node_key} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
-        print("==", self.__distances)
+        print("==", self.path_weight)
 
 
-        """3) 開始のノードの隣接ノードに移動して更に先の隣接ノードのself.__distancesを更新"""
+        """3) 開始のノードの隣接ノードに移動して更に先の隣接ノードのself.path_weightを更新"""
         """start_node_keyの隣接ノードをweigthの軽い順にソート"""
-        next_nodes = sorted([n for n in self.__distances.items() if n[1] != float('inf') and n[0] != start_node_key], key=lambda x:x[1])
-        # next_nodes = sorted([n for n in self.__distances.items() if n[1] != None and n[0] != start_node_key], key=lambda x:x[1], reverse=True)
+        next_nodes = sorted([n for n in self.path_weight.items() if n[1] != float('inf') and n[0] != start_node_key], key=lambda x:x[1])
+        # next_nodes = sorted([n for n in self.path_weight.items() if n[1] != None and n[0] != start_node_key], key=lambda x:x[1], reverse=True)
         """start_node_keyの隣接ノードの各々についてweightを更新"""
         for n in next_nodes:
             # print(n)
             print("===",n, self.__graph.nodes[n[0]].adj_nodes.values())
             for adj_n in self.__graph.nodes[n[0]].adj_nodes.values():
-                # print("    ", n[1], self.__graph.nodes[n[0]].adj_weights[str(adj_n)], "    ", self.__distances[str(adj_n)] )
-                """self.___distances更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
-                # if self.__distances[str(adj_n)] == None or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.__distances[str(adj_n)]:
-                if self.__distances[str(adj_n)] == float('inf') or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.__distances[str(adj_n)]:
-                    self.__distances[str(adj_n)] = n[1] + self.__graph.nodes[n[0]].adj_weights[str(adj_n)]
+                # print("    ", n[1], self.__graph.nodes[n[0]].adj_weights[str(adj_n)], "    ", self.path_weight[str(adj_n)] )
+                """self._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
+                # if self.path_weight[str(adj_n)] == None or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.path_weight[str(adj_n)]:
+                if self.path_weight[str(adj_n)] == float('inf') or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.path_weight[str(adj_n)]:
+                    self.path_weight[str(adj_n)] = n[1] + self.__graph.nodes[n[0]].adj_weights[str(adj_n)]
                     """TODO 誰が最低値を更新したか記録する"""
                     self.__whoUpdated[str(adj_n)] = n[0]
                     print("================",str(adj_n), n[0] )
@@ -91,7 +91,7 @@ class ShortestPath(object):
             logger.debug(f'ShortestPath.find_shortest_path node:{n[0]} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
             # self.__graph.return_nodes()
 
-        logger.debug(f'ShortestPath.find_shortest_path self.__distances:{self.__distances}')
+        logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
         logger.debug(f'ShortestPath.find_shortest_path self.__whoUpdated:{self.__whoUpdated}')
 
         """4) 残りのノードの処理"""
@@ -101,17 +101,17 @@ class ShortestPath(object):
         while( n:= self.next_node()):
             print("===",n, self.__graph.nodes[n[0]].adj_nodes.values())
             for adj_n in self.__graph.nodes[n[0]].adj_nodes.values():
-                # print("    ", n[1], self.__graph.nodes[n[0]].adj_weights[str(adj_n)], "    ", self.__distances[str(adj_n)] )
-                """self.___distances更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
-                # if self.__distances[str(adj_n)] == None or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.__distances[str(adj_n)]:
-                if self.__distances[str(adj_n)] == float('inf') or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.__distances[str(adj_n)]:
-                    self.__distances[str(adj_n)] = n[1] + self.__graph.nodes[n[0]].adj_weights[str(adj_n)]
+                # print("    ", n[1], self.__graph.nodes[n[0]].adj_weights[str(adj_n)], "    ", self.path_weight[str(adj_n)] )
+                """self._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
+                # if self.path_weight[str(adj_n)] == None or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.path_weight[str(adj_n)]:
+                if self.path_weight[str(adj_n)] == float('inf') or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.path_weight[str(adj_n)]:
+                    self.path_weight[str(adj_n)] = n[1] + self.__graph.nodes[n[0]].adj_weights[str(adj_n)]
                     """TODO 誰が最低値を更新したか記録する"""
                     self.__whoUpdated[str(adj_n)] = n[0]
                     print("================",str(adj_n), n[0] )
             """TODO 該当ノードをvisistedにする"""
             self.__graph.nodes[n[0]].visit_state = State.visited
-            logger.debug(f'ShortestPath.find_shortest_path self.__distances:{self.__distances}')
+            logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
             logger.debug(f'ShortestPath.find_shortest_path self.__whoUpdated:{self.__whoUpdated}')
             logger.debug(f'ShortestPath.find_shortest_path node:{n[0]} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
 
@@ -137,7 +137,7 @@ class ShortestPath(object):
         unvisited_nodes_weight = {}
         # unvisted_nodes = [n for n in self.__graph.nodes if self.__graph.nodes[n].visit_state == State.unvisited]
         for m in [n for n in self.__graph.nodes if self.__graph.nodes[n].visit_state == State.unvisited]:
-            unvisited_nodes_weight[m]=self.__distances[m]
+            unvisited_nodes_weight[m]=self.path_weight[m]
         logger.debug(f'ShortestPath.next_node unvisited_nodes_weight:{unvisited_nodes_weight}')
 
         if len(unvisited_nodes_weight) == 0:
@@ -183,7 +183,7 @@ class TestShortestPath(unittest.TestCase):
 
         result = shortest_path.find_shortest_path('a', 'i')
         self.assertEqual(result, ['a', 'c', 'd', 'g', 'i'])
-        # self.assertEqual(shortest_path.path_weight['i'], 8)
+        self.assertEqual(shortest_path.path_weight['i'], 8)
 
         print('Success: test_shortest_path')
 
