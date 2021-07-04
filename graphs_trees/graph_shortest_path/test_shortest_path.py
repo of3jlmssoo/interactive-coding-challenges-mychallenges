@@ -13,7 +13,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = True
+logger.disabled = False
 
 class ShortestPath(object):
 
@@ -59,14 +59,13 @@ class ShortestPath(object):
             # print(self.__graph.nodes[start_node_key].adj_weights[str(adj_n)])
             self.path_weight[str(adj_n)] = self.path_weight[start_node_key] + self.__graph.nodes[start_node_key].adj_weights[str(adj_n)]
             self.__whoUpdated[str(adj_n)] = start_node_key
-            print("=",str(adj_n), start_node_key )
         logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
         logger.debug(f'ShortestPath.find_shortest_path self.__whoUpdated:{self.__whoUpdated}')
         """start_node_keyのノードをvisistedにセット。"""
         """self.__whoUpdatedは最初のノードなので更新しない。更新するとしたら自分の値か"""
         self.__graph.nodes[start_node_key].visit_state = State.visited
         logger.debug(f'ShortestPath.find_shortest_path node:{start_node_key} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
-        print("==", self.path_weight)
+        logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
 
 
         """3) 開始のノードの隣接ノードに移動して更に先の隣接ノードのself.path_weightを更新"""
@@ -76,7 +75,6 @@ class ShortestPath(object):
         """start_node_keyの隣接ノードの各々についてweightを更新"""
         for n in next_nodes:
             # print(n)
-            print("===",n, self.__graph.nodes[n[0]].adj_nodes.values())
             for adj_n in self.__graph.nodes[n[0]].adj_nodes.values():
                 # print("    ", n[1], self.__graph.nodes[n[0]].adj_weights[str(adj_n)], "    ", self.path_weight[str(adj_n)] )
                 """self._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
@@ -85,7 +83,6 @@ class ShortestPath(object):
                     self.path_weight[str(adj_n)] = n[1] + self.__graph.nodes[n[0]].adj_weights[str(adj_n)]
                     """TODO 誰が最低値を更新したか記録する"""
                     self.__whoUpdated[str(adj_n)] = n[0]
-                    print("================",str(adj_n), n[0] )
             """TODO 該当ノードをvisistedにする"""
             self.__graph.nodes[n[0]].visit_state = State.visited
             logger.debug(f'ShortestPath.find_shortest_path node:{n[0]} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
@@ -96,10 +93,7 @@ class ShortestPath(object):
 
         """4) 残りのノードの処理"""
         """ HACK: duplicated code with the above."""
-        # n = self.next_node() # n:next node
-        # for n in self.next_node(): # n:next node
         while( n:= self.next_node()):
-            print("===",n, self.__graph.nodes[n[0]].adj_nodes.values())
             for adj_n in self.__graph.nodes[n[0]].adj_nodes.values():
                 # print("    ", n[1], self.__graph.nodes[n[0]].adj_weights[str(adj_n)], "    ", self.path_weight[str(adj_n)] )
                 """self._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
@@ -108,7 +102,6 @@ class ShortestPath(object):
                     self.path_weight[str(adj_n)] = n[1] + self.__graph.nodes[n[0]].adj_weights[str(adj_n)]
                     """TODO 誰が最低値を更新したか記録する"""
                     self.__whoUpdated[str(adj_n)] = n[0]
-                    print("================",str(adj_n), n[0] )
             """TODO 該当ノードをvisistedにする"""
             self.__graph.nodes[n[0]].visit_state = State.visited
             logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
@@ -116,13 +109,13 @@ class ShortestPath(object):
             logger.debug(f'ShortestPath.find_shortest_path node:{n[0]} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
 
         """5) start_node_keyからend_node_keyの間のノードをリストアップ"""
+        return self.make_route(start_node_key, end_node_key)
+
+    def make_route(self, start_node_key, end_node_key):
         """
         self.__whoUpdated:{'a': None, 'b': 'c', 'c': 'a', 'e': 'a', 'd': 'c', 'g': 'd', 'h': 'd', 'i': 'g', 'f': 'h'}
         self.assertEqual(result, ['a', 'c', 'd', 'g', 'i'])
         """
-        return self.make_route(start_node_key, end_node_key)
-
-    def make_route(self, start_node_key, end_node_key):
         route = [end_node_key]
         current_node = end_node_key
         l = len(self.__whoUpdated)
@@ -175,11 +168,11 @@ class TestShortestPath(unittest.TestCase):
         graph.add_edge('h', 'f', weight=2)
         graph.add_edge('h', 'g', weight=2)
         
-        graph.return_nodes()
+        # graph.return_nodes()
         
         shortest_path = ShortestPath(graph)
 
-        shortest_path.find_shortest_path('a', 'i')
+        # shortest_path.find_shortest_path('a', 'i')
 
         result = shortest_path.find_shortest_path('a', 'i')
         self.assertEqual(result, ['a', 'c', 'd', 'g', 'i'])
