@@ -46,7 +46,6 @@ class ShortestPath(object):
 
         """1) 開始ノードのself.path_weightを0にセット"""
         """start_node_keyのノードを0にセット"""
-        # if self.path_weight[start_node_key] == None:
         if self.path_weight[start_node_key] == float('inf'):
            self.path_weight[start_node_key] = 0 
         logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
@@ -55,61 +54,44 @@ class ShortestPath(object):
         """2) 開始ノードの隣接ノードのself.path_weightを更新"""
         """start_node_keyの隣接ノードのself._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
         for adj_n in self.__graph.nodes[start_node_key].adj_nodes.values():
-            # print(adj_n)
-            # print(self.__graph.nodes[start_node_key].adj_weights[str(adj_n)])
             self.path_weight[str(adj_n)] = self.path_weight[start_node_key] + self.__graph.nodes[start_node_key].adj_weights[str(adj_n)]
             self.__whoUpdated[str(adj_n)] = start_node_key
-        logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
-        logger.debug(f'ShortestPath.find_shortest_path self.__whoUpdated:{self.__whoUpdated}')
         """start_node_keyのノードをvisistedにセット。"""
         """self.__whoUpdatedは最初のノードなので更新しない。更新するとしたら自分の値か"""
         self.__graph.nodes[start_node_key].visit_state = State.visited
         logger.debug(f'ShortestPath.find_shortest_path node:{start_node_key} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
         logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
-
+        logger.debug(f'ShortestPath.find_shortest_path self.__whoUpdated:{self.__whoUpdated}')
 
         """3) 開始のノードの隣接ノードに移動して更に先の隣接ノードのself.path_weightを更新"""
         """start_node_keyの隣接ノードをweigthの軽い順にソート"""
         next_nodes = sorted([n for n in self.path_weight.items() if n[1] != float('inf') and n[0] != start_node_key], key=lambda x:x[1])
-        # next_nodes = sorted([n for n in self.path_weight.items() if n[1] != None and n[0] != start_node_key], key=lambda x:x[1], reverse=True)
         """start_node_keyの隣接ノードの各々についてweightを更新"""
         for n in next_nodes:
-            # print(n)
-            for adj_n in self.__graph.nodes[n[0]].adj_nodes.values():
-                # print("    ", n[1], self.__graph.nodes[n[0]].adj_weights[str(adj_n)], "    ", self.path_weight[str(adj_n)] )
-                """self._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
-                # if self.path_weight[str(adj_n)] == None or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.path_weight[str(adj_n)]:
-                if self.path_weight[str(adj_n)] == float('inf') or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.path_weight[str(adj_n)]:
-                    self.path_weight[str(adj_n)] = n[1] + self.__graph.nodes[n[0]].adj_weights[str(adj_n)]
-                    """TODO 誰が最低値を更新したか記録する"""
-                    self.__whoUpdated[str(adj_n)] = n[0]
-            """TODO 該当ノードをvisistedにする"""
-            self.__graph.nodes[n[0]].visit_state = State.visited
-            logger.debug(f'ShortestPath.find_shortest_path node:{n[0]} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
-            # self.__graph.return_nodes()
+            self.process_nodes(start_node_key, end_node_key, n)
 
         logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
         logger.debug(f'ShortestPath.find_shortest_path self.__whoUpdated:{self.__whoUpdated}')
 
         """4) 残りのノードの処理"""
-        """ HACK: duplicated code with the above."""
         while( n:= self.next_node()):
-            for adj_n in self.__graph.nodes[n[0]].adj_nodes.values():
-                # print("    ", n[1], self.__graph.nodes[n[0]].adj_weights[str(adj_n)], "    ", self.path_weight[str(adj_n)] )
-                """self._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
-                # if self.path_weight[str(adj_n)] == None or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.path_weight[str(adj_n)]:
-                if self.path_weight[str(adj_n)] == float('inf') or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.path_weight[str(adj_n)]:
-                    self.path_weight[str(adj_n)] = n[1] + self.__graph.nodes[n[0]].adj_weights[str(adj_n)]
-                    """TODO 誰が最低値を更新したか記録する"""
-                    self.__whoUpdated[str(adj_n)] = n[0]
-            """TODO 該当ノードをvisistedにする"""
-            self.__graph.nodes[n[0]].visit_state = State.visited
-            logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
-            logger.debug(f'ShortestPath.find_shortest_path self.__whoUpdated:{self.__whoUpdated}')
-            logger.debug(f'ShortestPath.find_shortest_path node:{n[0]} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
+            self.process_nodes(start_node_key, end_node_key,n)
 
         """5) start_node_keyからend_node_keyの間のノードをリストアップ"""
         return self.make_route(start_node_key, end_node_key)
+    
+    def process_nodes(self, start_node_key,end_node_key,n):
+        for adj_n in self.__graph.nodes[n[0]].adj_nodes.values():
+            """self._path_weight更新。start_node_keyのweight+start_node_keyから該当ノードへのweight"""
+            if self.path_weight[str(adj_n)] == float('inf') or (n[1]+self.__graph.nodes[n[0]].adj_weights[str(adj_n)]) < self.path_weight[str(adj_n)]:
+                self.path_weight[str(adj_n)] = n[1] + self.__graph.nodes[n[0]].adj_weights[str(adj_n)]
+                """TODO(done) 誰が最低値を更新したか記録する"""
+                self.__whoUpdated[str(adj_n)] = n[0]
+        """TODO(done) 該当ノードをvisistedにする"""
+        self.__graph.nodes[n[0]].visit_state = State.visited
+        logger.debug(f'ShortestPath.find_shortest_path self.path_weight:{self.path_weight}')
+        logger.debug(f'ShortestPath.find_shortest_path self.__whoUpdated:{self.__whoUpdated}')
+        logger.debug(f'ShortestPath.find_shortest_path node:{n[0]} visit_state:{self.__graph.nodes[start_node_key].visit_state}' )
 
     def make_route(self, start_node_key, end_node_key):
         """
