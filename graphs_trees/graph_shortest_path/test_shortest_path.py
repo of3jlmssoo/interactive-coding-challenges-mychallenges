@@ -111,7 +111,10 @@ class ShortestPath(object):
             route.append(self.__whoUpdated[current_node])
             current_node = self.__whoUpdated[current_node]
             l-=1
-        route.reverse()
+        if l==0:
+            route = None
+        else:
+            route.reverse()
         return route
 
     def next_node(self):
