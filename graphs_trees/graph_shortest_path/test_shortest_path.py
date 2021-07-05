@@ -19,7 +19,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 class ShortestPath(object):
 
@@ -47,6 +47,9 @@ class ShortestPath(object):
         4) 残りのノードの処理
         5) start_node_keyからend_node_keyの間のノードをリストアップ
         """
+
+        # if start_node_key == end_node_key:
+        #     return start_node_key
 
         """1) 開始ノードのself.path_weightを0にセット"""
         """start_node_keyのノードを0にセット"""
@@ -102,19 +105,29 @@ class ShortestPath(object):
         """
         self.__whoUpdated:{'a': None, 'b': 'c', 'c': 'a', 'e': 'a', 'd': 'c', 'g': 'd', 'h': 'd', 'i': 'g', 'f': 'h'}
         self.assertEqual(result, ['a', 'c', 'd', 'g', 'i'])
+
+
+        test_shortest_path_unweightedのために(3つ目のテスト)
+            self.assertEqual(graph.shortest_path(nodes[4].key, nodes[5].key), None)
+        1) while中にif / break組み込み
+        2) if route[0] == end_node_key and  route[-1] == start_node_key:
         """
         route = [end_node_key]
         current_node = end_node_key
         l = len(self.__whoUpdated)
 
         while current_node!=start_node_key and l>0:
+            if self.__whoUpdated[current_node] == None:
+                break
             route.append(self.__whoUpdated[current_node])
             current_node = self.__whoUpdated[current_node]
             l-=1
-        if l==0:
-            route = None
-        else:
+
+        if route[0] == end_node_key and  route[-1] == start_node_key:
             route.reverse()
+        else:
+            route = None
+        
         return route
 
     def next_node(self):
