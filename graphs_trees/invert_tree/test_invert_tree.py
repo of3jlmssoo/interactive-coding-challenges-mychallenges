@@ -1,5 +1,23 @@
+import logging
 import unittest
+from test_bst import Node, Bst
 
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+logger.propagate = False
+# DEBUG INFO WARNIG ERROR CRTICAL
+logger.setLevel(logging.DEBUG)
+ch.setLevel(logging.DEBUG)
+logger.disabled = False
+
+class InverseBst(Bst):
+
+    def invert_tree(self):
+        # TODO: Implement me
+        pass
 
 class TestInvertTree(unittest.TestCase):
 
