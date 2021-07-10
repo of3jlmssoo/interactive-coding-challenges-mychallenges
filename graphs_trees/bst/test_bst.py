@@ -76,7 +76,8 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = True
+logger.disabled = False
+
 
 class Node(object):
 
@@ -100,7 +101,8 @@ class Node(object):
             print(f'Node.ls_nodes No node available.')
         else:
             for n in Node.nodes:
-                logger.debug(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
+                # logger.debug(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
+                print(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
 
 
 class Bst(object):
@@ -116,13 +118,18 @@ class Bst(object):
         # pass
         logger.debug(f'Bst.insert called. data : {data}')
         node = Node(data)
+        self.return_node = node
         # if Bst.the_root == None:
         #     Bst.the_root = node
         if self.__theRoot == None:
+            logger.debug(f'Bst.insert self.__theRoot == None self.__theRoot:{self.__theRoot}')
             self.__theRoot = node
         else:
             # current_node = Bst.the_root
+            logger.debug(f'Bst.insert self.__theRoot != None self.__theRoot:{self.__theRoot}')
             current_node = self.__theRoot
+            logger.debug(f'Bst.insert current_node:{current_node}  current_node.data:{current_node.data}')
+            logger.debug(f'Bst.insert node:{node}  node.data:{node.data}') 
             is_occupied = False
             i=0
             while is_occupied == False:
@@ -165,6 +172,15 @@ class Bst(object):
         # print("====> ",node.data)
         yield node.data
         yield from self.inorder(node.right)
+        
+    @property
+    def theRoot(self):
+        return self.__theRoot
+
+    @theRoot.setter
+    def theRoot(self, root):
+        print("-------------------------")
+        self.__theRoot = root
 
 class MyTestTree(unittest.TestCase):
 
