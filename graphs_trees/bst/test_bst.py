@@ -76,7 +76,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 
 class Node(object):
@@ -117,39 +117,38 @@ class Bst(object):
         # TODO: Implement me
         # pass
         logger.debug(f'Bst.insert called. data : {data}')
-        node = Node(data)
-        self.return_node = node
+        self.node = Node(data)
         # if Bst.the_root == None:
         #     Bst.the_root = node
         if self.__theRoot == None:
             logger.debug(f'Bst.insert self.__theRoot == None self.__theRoot:{self.__theRoot}')
-            self.__theRoot = node
+            self.__theRoot = self.node
         else:
             # current_node = Bst.the_root
             logger.debug(f'Bst.insert self.__theRoot != None self.__theRoot:{self.__theRoot}')
             current_node = self.__theRoot
             logger.debug(f'Bst.insert current_node:{current_node}  current_node.data:{current_node.data}')
-            logger.debug(f'Bst.insert node:{node}  node.data:{node.data}') 
+            logger.debug(f'Bst.insert node:{self.node}  node.data:{self.node.data}') 
             is_occupied = False
             i=0
             while is_occupied == False:
-                if current_node.data > node.data:
+                if current_node.data > self.node.data:
                     logger.debug(f'Bst.insert 3-1 while current_node:{current_node} current_node.left:{current_node.left}')
                     if current_node.left == None:
                         logger.debug(f'Bst.insert 3-1-1 while current_node:{current_node} current_node.left:{current_node.left}')
                         is_occupied = True
-                        current_node.left = node
-                        node.parent = current_node
+                        current_node.left = self.node
+                        self.node.parent = current_node
                     current_node = current_node.left
-                elif current_node.data < node.data: 
+                elif current_node.data < self.node.data: 
                     logger.debug(f'Bst.insert 3-2 while ')
                     if current_node.right == None:
                         is_occupied = True
-                        current_node.right = node
-                        node.parent = current_node
+                        current_node.right = self.node
+                        self.node.parent = current_node
                     current_node = current_node.right
                 else:
-                    raise Exception(f'Something wrong. current_node.data:{current_node.data}, node.data:{node.data}')
+                    raise Exception(f'Something wrong. current_node.data:{current_node.data}, node.data:{self.node.data}')
 
     def ls_nodes(self):
         # if Bst.the_root == None: 
@@ -179,7 +178,6 @@ class Bst(object):
 
     @theRoot.setter
     def theRoot(self, root):
-        print("-------------------------")
         self.__theRoot = root
 
 class MyTestTree(unittest.TestCase):
