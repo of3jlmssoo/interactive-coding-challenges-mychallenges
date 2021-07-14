@@ -104,7 +104,9 @@ class Node(object):
                 # logger.debug(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
                 print(f'Node.ls_nodes {n} data:{n.data}, left:{n.left}, right:{n.right}, parent:{n.parent}')
 
-
+    def clear_nodes(self):
+        Node.nodes=[]
+        
 class Bst(object):
 
     # the_root = None
