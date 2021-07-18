@@ -1,5 +1,59 @@
-import unittest
 
+import unittest
+import logging
+from collections import deque
+
+from test_bst import Bst, Node
+from results import Results
+
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+logger.propagate = False
+# DEBUG INFO WARNIG ERROR CRTICAL
+logger.setLevel(logging.DEBUG)
+ch.setLevel(logging.DEBUG)
+logger.disabled = False
+
+
+class BstLevelLists(Bst):
+
+    def __init__(self, root) -> None:
+        super().__init__()    
+        root.nodes=[]
+        self.theRoot = root
+        self.root = self.theRoot    
+
+    def create_level_lists(self):
+        # TODO: Implement me
+        pass
+        return self.viewTree() 
+
+    def viewTree(self):
+        d1 = deque([self.theRoot])
+        d2 = deque([])
+
+        row_result = []
+        result = []
+
+
+        while len(d1):
+            # whileループ中でd1の中身をd2に移す
+            while len(d1):           
+                d2.append(d1.pop())
+            # print(f'---+ ')
+            # d2の中身を全て処理する。left or rigthがある場合d1にappendする
+            while len(d2):
+                node = d2.pop()
+                # print(f'{node.data} ', end='') 
+                row_result.append(node.data)
+                if node.left != None:   d1.append(node.left)
+                if node.right != None:  d1.append(node.right) 
+            result.append(row_result)
+            row_result = []
+        return result
 
 class TestTreeLevelLists(unittest.TestCase):
 
@@ -16,7 +70,10 @@ class TestTreeLevelLists(unittest.TestCase):
         bst.insert(10)
         bst.insert(11)
 
+        # bst.ls_nodes()
+
         levels = bst.create_level_lists()
+
         results_list = []
         for level in levels:
             results = Results()
