@@ -43,6 +43,10 @@ class Node(object):
 
 class LinkedList(object):
 
+    def ls_nodes(self):
+        for n in self.q:
+            print(f'{n} {n.data} {n.link}')
+
     def __init__(self, head=None):
         pass
         # TODO: Implement me
@@ -67,7 +71,10 @@ class LinkedList(object):
 
         node = Node(data, None)
         self.head = node
-        # self.q.append(node)
+        if self.q:
+            node.link = self.q[0]
+        else:
+            node.link = None
         self.q = [node] + self.q
         logger.debug(
             f'LinkedList.insert_to_front: {self.head} {self.q} {node.link}')
@@ -87,7 +94,12 @@ class LinkedList(object):
         node = Node(data, None)
         if self.head is None:
             self.head = node
-        # self.q.append(node)
+
+        if self.q:
+            self.q[-1].link = node
+        else:
+            node.link = None
+
         self.q = self.q + [node]
         logger.debug(
             f'LinkedList.insert_to_front: {self.head} {self.q} {node.link}')
@@ -116,24 +128,29 @@ class LinkedList(object):
         # 1. empty listでの、存在しないデータを削除しようとする。何もしない
         #     ValueErrorが起きる
         # 2. delete noneしようとする。何もしない
+        # 4. 存在しないものを削除しようとする
+
         try:
             # idx = self.q.index(data)
-            idx = [n.data for n in self.q].index(data)
+            idx = [str(n.data) for n in self.q].index(data)
         except ValueError:
+            print(f'LinkedList.delete: ValueError occured. {data} {self.q}')
+            # for n in self.q:
+            #     print(f'---{n.data}')
+            #     print(f'{type(data)} {type(n.data)}')
             return
         # 3. 3要素で真ん中を削除。linkをセットする
+        # 5. 先頭を削除
+        # 6. 一番最後を削除
         self.q.pop(idx)
+        # print(f'--------{idx} {len(self.q) + 1}')
         if idx == 0:
             self.head = self.q[0]
             self.q[0].link = self.q[idx + 1]
-        elif idx == len(self.q) + 1:  # one element(index==idx) already deleted
+        elif idx == len(self.q):  # + 1:  # one element(index==idx) already deleted
             self.q[idx - 1].link = None
         else:
             self.q[idx - 1].link = self.q[idx]
-
-        # 4. 存在しないものを削除しようとする
-        # 5. 先頭を削除
-        # 6. 一番最後を削除
 
     def print_list(self):
         pass
@@ -164,6 +181,8 @@ class TestLinkedList(unittest.TestCase):
 
         print('Success: test_insert_to_front\n')
 
+        # linked_list.ls_nodes()
+
     def test_append(self):
         print('Test: append on an empty list')
         linked_list = LinkedList(None)
@@ -180,6 +199,8 @@ class TestLinkedList(unittest.TestCase):
         self.assertEqual(linked_list.get_all_data(), [10, 'a', 'bc'])
 
         print('Success: test_append\n')
+
+        # linked_list.ls_nodes()
 
     def test_find(self):
         print('Test: find on an empty list')
@@ -207,6 +228,8 @@ class TestLinkedList(unittest.TestCase):
 
         print('Success: test_find\n')
 
+        # linked_list.ls_nodes()
+
     def test_delete(self):
         print('Test: delete on an empty list')
         linked_list = LinkedList(None)
@@ -224,7 +247,13 @@ class TestLinkedList(unittest.TestCase):
         linked_list = LinkedList(head)
         linked_list.insert_to_front('a')
         linked_list.insert_to_front('bc')
+
+        # linked_list.ls_nodes()
+
         linked_list.delete('a')
+
+        # linked_list.ls_nodes()
+
         self.assertEqual(linked_list.get_all_data(), ['bc', 10])
 
         print('Test: delete general case with no matches')
@@ -247,6 +276,31 @@ class TestLinkedList(unittest.TestCase):
 
         print('Success: test_len\n')
 
+    def test_delete2(self):
+
+        print('2 Test: delete general case with matches')
+        head = Node(10)
+        linked_list = LinkedList(head)
+        linked_list.insert_to_front('a')
+        linked_list.insert_to_front('bc')
+        # linked_list.ls_nodes()
+        linked_list.delete('10')
+        # print('\n')
+        # linked_list.ls_nodes()
+        # print('\n')
+
+        linked_list = LinkedList(None)
+        head = Node(10)
+        linked_list = LinkedList(head)
+        linked_list.insert_to_front('a')
+        linked_list.insert_to_front('bc')
+        # linked_list.ls_nodes()
+        linked_list.delete('bc')
+        # print('\n')
+        # linked_list.ls_nodes()
+
+        print('2 Success: test_delete\n')
+
 
 def main():
     test = TestLinkedList()
@@ -255,6 +309,8 @@ def main():
     test.test_find()
     test.test_delete()
     test.test_len()
+
+    test.test_delete2()
 
 
 if __name__ == '__main__':
