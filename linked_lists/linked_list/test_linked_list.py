@@ -68,15 +68,15 @@ class LinkedList(object):
         if data is None:
             return
 
-        node = Node(data, None)
-        self.head = node
+        self.node = Node(data, None)
+        self.head = self.node
         if self.q:
-            node.link = self.q[0]
+            self.node.link = self.q[0]
         else:
-            node.link = None
-        self.q = [node] + self.q
+            self.node.link = None
+        self.q = [self.node] + self.q
         logger.debug(
-            f'LinkedList.insert_to_front: {self.head} {self.q} {node.link}')
+            f'LinkedList.insert_to_front: {self.head} {self.q} {self.node.link}')
 
         """
         head pointer = node10
