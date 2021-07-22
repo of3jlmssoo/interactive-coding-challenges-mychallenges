@@ -11,7 +11,6 @@ link of the last ndoe is null
 """
 import unittest
 import logging
-from collections import deque
 
 
 logger = logging.getLogger(__name__)
@@ -139,17 +138,17 @@ class LinkedList(object):
             #     print(f'---{n.data}')
             #     print(f'{type(data)} {type(n.data)}')
             return
-        # 3. 3要素で真ん中を削除。linkをセットする
-        # 5. 先頭を削除
-        # 6. 一番最後を削除
         self.q.pop(idx)
         # print(f'--------{idx} {len(self.q) + 1}')
         if idx == 0:
+            # 5. 先頭を削除
             self.head = self.q[0]
             self.q[0].link = self.q[idx + 1]
-        elif idx == len(self.q):  # + 1:  # one element(index==idx) already deleted
+        elif idx == len(self.q):
+            # 6. 一番最後を削除
             self.q[idx - 1].link = None
         else:
+            # 3. 3要素で真ん中を削除。linkをセットする
             self.q[idx - 1].link = self.q[idx]
 
     def print_list(self):
@@ -157,9 +156,10 @@ class LinkedList(object):
         # TODO: Implement me
 
     def get_all_data(self):
-        pass
+        # pass
         # TODO: Implement me
-        return [n.data for n in self.q]
+        # return [n.data for n in self.q]
+        return [n.data if n is not None else None for n in self.q]
 
 
 class TestLinkedList(unittest.TestCase):
