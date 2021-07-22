@@ -56,6 +56,9 @@ class MyLinkedList(LinkedList):
 
     def insert_to_front(self, data):
         logger.debug(f'MyLinkedList.insert_to_front. called {data} {self.q}')
+        # self.q = [None]の場合self.qをクリアした上でinsert_to_front()をコールする
+        # オリジナルのinsert_to_front()はreturn self.nodeしないため、オリジナルの
+        # nodeをself.nodeにした上でreturn self.nodeする
         if len(self.q) == 1 and self.q[0] is None:
             self.q = []
         super().insert_to_front(data)
@@ -91,8 +94,9 @@ class MyLinkedList(LinkedList):
             f'MyLinkedList.delete_node 3-2. called {self.q.index(node)}  {len(self.q) - 1}')
         idx = self.q.index(node)
         if 1 < idx < (len(self.q) - 1):
-            self.q = list(filter(lambda x: x != node, self.q))
-            self.q[idx - 1].link = self.q[idx]
+            # 最初と最後以外のノードを処理
+            self.q = list(filter(lambda x: x != node, self.q))  # 該当エレメントを削除
+            self.q[idx - 1].link = self.q[idx]                  # リンクを処理
             if not logger.disabled:
                 for n in self.q:
                     print(
@@ -101,6 +105,7 @@ class MyLinkedList(LinkedList):
             # 最後のエントリーを削除した場合最後のエントリーをNoneにする。
             # 直前のエントリーのnode.linkをNoneに設定する
         elif idx == len(self.q) - 1:
+            # 最後のノードを処理
             self.q[-1] = None
             self.q[-2].link = self.q[-1]
 
