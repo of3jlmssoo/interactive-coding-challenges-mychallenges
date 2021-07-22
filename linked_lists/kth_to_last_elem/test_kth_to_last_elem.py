@@ -1,4 +1,35 @@
 import unittest
+import unittest
+import logging
+# from test_delete_mid import MyLinkedList
+from test_linked_list import LinkedList, Node
+
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler()
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+logger.propagate = False
+# DEBUG INFO WARNIG ERROR CRTICAL
+logger.setLevel(logging.DEBUG)
+ch.setLevel(logging.DEBUG)
+logger.disabled = False
+
+
+class MyLinkedList(LinkedList):
+
+    def kth_to_last_elem(self, k):
+        # TODO: Implement me
+        # pass
+
+        # Empty list -> None
+        # k is >= the length of the linked list -> None
+        if not self.q or k >= len(self.q):
+            return None
+        # One element, k = 0 -> element
+        # General case with many elements, k < length of linked list
+        return self.q[k].data
 
 
 class Test(unittest.TestCase):
