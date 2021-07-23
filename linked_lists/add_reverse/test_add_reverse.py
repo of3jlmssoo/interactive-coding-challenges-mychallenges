@@ -1,4 +1,88 @@
+"""
+意味が分からなかったが、"Add two numbers whose digits are stored in a linked list in reverse order"で
+googleし、1つ目のエントリーが[参考]に記載したサイト。このExplanationを読んで理解できた。
+[参考]
+https://leetcode.com/problems/add-two-numbers/ のExplanation
+
+# Input 1: 6->5->None
+# Input 2: 9->8->7
+# Result: 5->4->8
+
+      56
+    +789
+    ----
+     845 -> 5,4,8
+
+# Input 1: 6->5->4
+# Input 2: 9->8->7
+# Result: 5->4->2->1
+
+     456
+    +789
+    ----
+    1245 -> 5,4,2,1
+
+first_list、second_list各々に対し
+index=0はx1
+index=1はx10
+index=2はx100
+で足していく
+
+足す
+
+reverseしてreturnする
+
+"""
+
 import unittest
+import logging
+
+from test_linked_list import LinkedList, Node
+
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler()
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+logger.propagate = False
+# DEBUG INFO WARNIG ERROR CRTICAL
+logger.setLevel(logging.DEBUG)
+ch.setLevel(logging.DEBUG)
+logger.disabled = False
+
+
+class MyLinkedList(LinkedList):
+
+    def add_reverse(self, first_list, second_list):
+        # TODO: Implement me
+        # pass
+        if not first_list or not second_list:
+            return None
+
+        """first_list、second_list各々に対し"""
+        """index=0はx1"""
+        """index=1はx10"""
+        """index=2はx100"""
+        """で足していく"""
+        """足す"""
+        result_int = self.make_int(first_list) + self.make_int(second_list)
+        # print(f'---{result_int}')
+
+        """reverseしてreturnする"""
+        for n in (list(str(result_int))):
+            self.insert_to_front(int(n))
+
+        return self
+
+    def make_int(self, lst):
+        result = 0
+        i = 1
+        for n in lst.q:
+            # print(f'--- {n.data}')
+            result += n.data * i
+            i = i * 10
+        return result
 
 
 class TestAddReverse(unittest.TestCase):
