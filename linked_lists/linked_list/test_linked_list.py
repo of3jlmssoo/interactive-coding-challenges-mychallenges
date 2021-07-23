@@ -124,11 +124,12 @@ class LinkedList(object):
         5. 先頭を削除
         6. 一番最後を削除
         """
-        # 1. empty listでの、存在しないデータを削除しようとする。何もしない
-        #     ValueErrorが起きる
-        # 2. delete noneしようとする。何もしない
-        # 4. 存在しないものを削除しようとする
 
+        """ 1. empty listでの、存在しないデータを削除しようとする。何もしない
+                ValueErrorが起きる
+            2. delete noneしようとする。何もしない
+            4. 存在しないものを削除しようとする
+        """
         try:
             # idx = self.q.index(data)
             idx = [str(n.data) for n in self.q].index(data)
@@ -141,14 +142,14 @@ class LinkedList(object):
         self.q.pop(idx)
         # print(f'--------{idx} {len(self.q) + 1}')
         if idx == 0:
-            # 5. 先頭を削除
+            """ 5. 先頭を削除 """
             self.head = self.q[0]
             self.q[0].link = self.q[idx + 1]
         elif idx == len(self.q):
-            # 6. 一番最後を削除
+            """ 6. 一番最後を削除"""
             self.q[idx - 1].link = None
         else:
-            # 3. 3要素で真ん中を削除。linkをセットする
+            """ 3. 3要素で真ん中を削除。linkをセットする"""
             self.q[idx - 1].link = self.q[idx]
 
     def print_list(self):

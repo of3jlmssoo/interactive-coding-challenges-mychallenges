@@ -22,13 +22,14 @@ class MyLinkedList(LinkedList):
     def kth_to_last_elem(self, k):
         # TODO: Implement me
         # pass
-
-        # Empty list -> None
-        # k is >= the length of the linked list -> None
+        """ Empty list -> None
+            k is >= the length of the linked list -> None
+        """
         if not self.q or k >= len(self.q):
             return None
-        # One element, k = 0 -> element
-        # General case with many elements, k < length of linked list
+        """ One element, k = 0 -> element
+            General case with many elements, k < length of linked list
+        """
         return self.q[k].data
 
 
