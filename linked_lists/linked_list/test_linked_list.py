@@ -31,13 +31,40 @@ class Node(object):
     def __init__(self, data, next_node=None):
         pass
         # TODO: Implement me
-        self.data = data
-        self.link = next_node
+        self.__data = data
+        self.__link = next_node
+
+        self.__next = self.__link
 
     def __str__(self):
         pass
         # TODO: Implement me
         return str(self.data)
+
+    @property
+    def data(self):
+        return self.__data
+
+    @data.setter
+    def data(self, n):
+        self.__data = n
+
+    @property
+    def link(self):
+        return self.__link
+
+    @link.setter
+    def link(self, n):
+        self.__link = n
+
+    @property
+    def next(self):
+        return self.__next
+
+    @next.setter
+    def next(self, n):
+        self.__next = n
+        self.__link = self.__next
 
 
 class LinkedList(object):
