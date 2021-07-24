@@ -4,9 +4,9 @@ cd ..
 cd ./delete_mid
 python test_delete_mid.py
 cd ..
-# cd ./find_loop_start
-# python test_find_loop_start.py
-# cd ..
+cd ./find_loop_start
+python test_find_loop_start.py
+cd ..
 cd ./kth_to_last_elem
 python test_kth_to_last_elem.py
 cd ..
