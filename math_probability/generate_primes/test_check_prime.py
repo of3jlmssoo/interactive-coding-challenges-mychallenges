@@ -1,0 +1,1 @@
+../check_prime/test_check_prime.py
