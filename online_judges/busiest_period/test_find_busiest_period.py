@@ -79,12 +79,12 @@ class Solution(object):
         if data == []:
             return None
 
-        df_in = self.make_dfin(data)                # インプットデータのpandas dataframe化
-        grouped_df_in = df_in.groupby('timestamp')  # timestampが重複しているのでgroupby
-        summary_df = (grouped_df_in.sum().cumsum()) # 重複をsumして更に累積化
-        idx = summary_df.index.get_loc(summary_df['signed_num_people'].idxmax()) # num_peopleが最大の行インデックスをidxに保存
-        data_for_Period =  list(summary_df.index[idx:idx+2]) # timestampがdataframeのindexとなっているので最大のインデックスと次のインデックスをリスト化する 
-        return Period(data_for_Period[0], data_for_Period[1])
+        df_in = self.make_dfin(data)                """ インプットデータのpandas dataframe化 """
+        grouped_df_in = df_in.groupby('timestamp')  """ timestampが重複しているのでgroupby """
+        summary_df = (grouped_df_in.sum().cumsum()) """ 重複をsumして更に累積化 """"
+        idx = summary_df.index.get_loc(summary_df['signed_num_people'].idxmax()) """ num_peopleが最大の行インデックスをidxに保存 """
+        data_for_Period =  list(summary_df.index[idx:idx+2]) """ timestampがdataframeのindexとなっているので最大のインデックスと次のインデックスをリスト化する  """
+        return Period(data_for_Period[0], data_for_Period[1]) 
 
     def make_dfout(self):
         return pd.DataFrame(columns=['timestamp', 'num_people'])
