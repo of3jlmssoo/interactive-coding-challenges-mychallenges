@@ -12,7 +12,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled  = False
+logger.disabled  = True
 
 
 class Solution(object):
