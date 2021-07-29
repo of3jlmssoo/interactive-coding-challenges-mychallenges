@@ -1,4 +1,5 @@
 """
+[テストデータ]
 'dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext' -> 32
 
 dir \n\t subdir1 \n\t\t file1.ext
@@ -12,21 +13,24 @@ dir subdir1  subsubdir1
 dir tsubdir2 subsubdir2 file2.ext
 
 
-
 [データ]
+
+(a)対象名称の       (b)リスト処理に (c)処理インディケータ(gap)
+\tの数              おける\tの数    (c) = (a) - (b)
+0       dir         0                0
+1       subdir1     0               +1
+2       file1.ext   1               +1
+2       subsubdir1  2                0
+1       subdir2     2               -1
+2       subsubdir2  1               +1
+3       file2.ext   2               +1
+                    next (b) = (b) + (c)
+
 1カラム目の数値は\tの数
 2カラム目はフォルダーかファイルの名前
 
-0 dir               +1
-1 subdir1           +1    
-2 file1.ext         +1
-2 subsubdir1         0
-1 subdir2           -1
-2 subsubdir2        +1
-3 file2.ext         +1
 
 [データ保管(リスト)]
-input_list = [[0, dir], [1,subdir1] ...]
 output_list = [
     [dir, subdir1,  file1.ext],
     [dir, subdir1, subsubdir1],
@@ -34,53 +38,30 @@ output_list = [
 ]
 
 [処理]
-output_list_index = 0
-t_num = -1
+olst = [[]]     アウトプット用リスト準備
+olst_idx = 0    アウトプット用リストのインデックス初期化
+t_num = 0       tの数のカウンター初期化
+
 先頭のデータを処理するために'\n'をアペンドする
 リストを順に処理
     \tの数チェック(inputlist[x][0]-t_num)
-        +1      名称をoutput_listのoutput_list_indexのリストに追加
-        同じ    (output_listのエレメントをコピーしてコピーされたエレメントの最終エレメント(リスト内リスト)を更新する)
-                output_list.append(output_list[output_list_index])
-                output_list_index += 1
-                output_list[output_list_index][-1] = 名称
-        -1      (output_listのエレメントを範囲指定でコピーして名称をアペンドする)
-                output_list.append(output_list[output_list_index][0:1])  
-                output_list_index += 1
-                output_list[output_list_index].append(名称)
-    t_num更新 (t_num=inputlist[x][0])
+        +1  olst_idx変更無しケース
+            名称をolst[olst_idx]に追加
 
+        =   olst_idx+=1ケース
+            olst[olst_idx]をolstにappend(deep copy)
+            olst_idx+=1
+            最後のエレメントを置換え
 
-TODO:以下は削除する
-'dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext' -> 32
+            ただし、\tの数が0の場合は例外処理(一番最初のデータ。例ではdir)
+            この場合olstは空の状態なので単純にappend
 
-dir
+        -1  olst_idx+=1ケース
+            olst[olst_idx]をolstにappend(deep copy)。ただし、全コピーではなく先頭から'\t'の数分だけコピーする
+            olst_idx+=1
+            olst[olst_idx]にアペンド
+        t_num更新
 
-\n\t
-dir subdir1                         [{\n\t:subdir1}]
-\n\t\t
-dir subdir1 file1.ext               [{\n\t:dir subdir1, \n\t\t:file1.ext}]
-\n\t\t
-dir subdir1 file1.ext
-dir subdir1 subsubdir1              [{\n\t:dir subdir1, \n\t\t:file1.ext}, {\n\t:dir subdir1}]
-                                    [{\n\t:dir subdir1, \n\t\t:file1.ext}, {\n\t:dir subdir1, \n\t\t:subsubdir1}]
-\n\t
-dir subdir1 file1.ext
-dir subdir1 subsubdir1
-dir subdir2                         [{\n\t:dir subdir1, \n\t\t:file1.ext}, {\n\t:dir subdir1, \n\t\t:subsubdir1},]
-\n\t\t
-dir subdir1 file1.ext
-dir subdir1 subsubdir1
-dir subdir2 subsubdir2
-\n\t\t\t
-dir subdir1 file1.ext
-dir subdir1 subsubdir1
-dir subdir2 subsubdir2 file2.ext
-
-
-(\\n)(\\t)+
-
-\\n(\\t)+[\\w.]+ match
 
 """
 from typing import Type
@@ -88,6 +69,9 @@ import unittest
 import logging
 import re
 import copy
+from functools import reduce
+from operator import add
+
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
@@ -99,7 +83,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 
 class Solution(object):
@@ -115,9 +99,9 @@ class Solution(object):
             return 0
 
         """
-        アウトプット用リスト準備
-        アウトプット用リストのインデックス初期化
-        tの数のカウンター初期化
+        olst = [[]]     アウトプット用リスト準備
+        olst_idx = 0    アウトプット用リストのインデックス初期化
+        t_num = 0       tの数のカウンター初期化
         """
         olst = [[]]
         olst_idx = 0
@@ -130,61 +114,70 @@ class Solution(object):
         m = re.findall(regex, file_system)
 
         for n in m:
+            if not logger.disabled:
+                print('n.count(t):', n.count('\t'), ' , t_num:',
+                      t_num, ', gap:', (n.count('\t') - t_num), ',\
+                word:', re.sub('\n\t*', '', n), end='')
+
             """ \tの数チェック(inputlist[x][0]-t_num) """
-            print('-------- n.count(t):',n.count('\t'),' , t_num:', t_num,', gap:',(n.count('\t') - t_num ),', word:', re.sub('\n\t*','',n), end='')
-            if ( gap := (n.count('\t') - t_num )) == 1:
-                olst[olst_idx].append(re.sub('\n\t*','',n))
+            if (gap := (n.count('\t') - t_num)) == 1:
+                """+1   olst_idx変更無しケース
+                        名称をolst[olst_idx]に追加 """
+                olst[olst_idx].append(re.sub('\n\t*', '', n))
             elif gap == 0:
-                if n.count('\t') ==0:
-                    olst[olst_idx].append(re.sub('\n\t*','',n))
+                if n.count('\t') == 0:
+                    """ ただし、\tの数が0の場合は例外処理(一番最初のデータ。例ではdir)
+                        この場合olstは空の状態なので単純にappend"""
+                    olst[olst_idx].append(re.sub('\n\t*', '', n))
                 else:
+                    """=    olst_idx+=1ケース
+                            olst[olst_idx]をolstにappend(deep copy)
+                            olst_idx+=1
+                            最後のエレメントを置換え"""
                     olst.append(copy.deepcopy(olst[olst_idx]))
                     olst_idx = olst_idx + 1
-                    olst[1][-1] = re.sub('\n\t*','',n)
+                    olst[1][-1] = re.sub('\n\t*', '', n)
             elif gap == -1:
+                """-1   olst_idx+=1ケース
+                        olst[olst_idx]をolstにappend(deep copy)。ただし、全コピーではなく先頭から'\t'の数分だけコピーする
+                        olst_idx+=1
+                        olst[olst_idx]にアペンド"""
                 olst.append(copy.deepcopy(olst[olst_idx][0:n.count('\t')]))
                 olst_idx = olst_idx + 1
-                olst[olst_idx].append(re.sub('\n\t*','',n))                
-
+                olst[olst_idx].append(re.sub('\n\t*', '', n))
             else:
-                print(' --- else', end='')
-            print(' olst : ', olst)
+                # print(' --- else', end='')
+                raise ValueError(
+                    f'Solution.length_longest_path: something wrong.')
+            if not logger.disabled:
+                print(' olst : ', olst)
             # print('\n')
-            """ t_num更新 (t_num=inputlist[x][0]) """
+            """ t_num更新 """
             t_num = t_num + gap
-                
 
-        """
-                +1      名称をoutput_listのoutput_list_indexのリストに追加
-                同じ    (output_listのエレメントをコピーしてコピーされたエレメントの最終エレメント(リスト内リスト)を更新する)
-                        output_list.append(output_list[output_list_index])
-                        output_list_index += 1
-                        output_list[output_list_index][-1] = 名称
-                -1      (output_listのエレメントを範囲指定でコピーして名称をアペンドする)
-                        output_list.append(output_list[output_list_index][0:1])  
-                        output_list_index += 1
-                        output_list[output_list_index].append(名称)
-        """
+        return self.calc_length2(olst)    
+        # return self.calc_length(olst)
 
+    def calc_length2(self,lst):
 
-"""
-        dic = {}
+        """ lst_lenは引数lst(リスト内リスト)の内側のリストの要素数-1。スラッシュの数となる"""
+        """ chr_lenは引数lst(リスト内リスト)の内側のリストの各要素の文字数を合計したもの"""
+        """ 2つのリストを足して最大値を求めてreturnする"""
+        lst_len = [len(j)-1 for j in [list(map(len,i)) for i in lst]]       # [2, 2, 3]
+        chr_len = [reduce(add,j) for j in [list(map(len,i)) for i in lst]]  # [19.20,29]
 
-        m = re.match(r'^\w+', file_system)
-        print(m.group())
+        return max(list(map(add, lst_len, chr_len)))
 
-        dic[0] = m.group()
-
-        print('1: ',file_system)
-        file_system = '\n' + file_system
-        print('2: ',file_system)
-        regex = r'\n\t*[\w.]+'
-        m = re.findall(regex, file_system)
-        print('3: ',m)
-
-        for n in m:
-            print(n.count('\t'), re.sub('\n\t*','',n))
-"""
+    def calc_length(self,lst):
+        result=0 # max length
+        for m in lst:
+            __len = 0
+            for n in m:
+                __len = __len + len(n)
+            __len = __len + (len(m)-1)    
+            if __len > result:
+                result = __len
+        return result
 
 class TestSolution(unittest.TestCase):
 
@@ -195,9 +188,9 @@ class TestSolution(unittest.TestCase):
         file_system = 'dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext'
         expected = 32
 
-        solution.length_longest_path(file_system)
+        # solution.length_longest_path(file_system)
 
-        # self.assertEqual(solution.length_longest_path(file_system), expected)
+        self.assertEqual(solution.length_longest_path(file_system), expected)
         print('Success: test_length_longest_path')
 
 
