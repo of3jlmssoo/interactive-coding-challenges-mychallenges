@@ -17,13 +17,13 @@ dir tsubdir2 subsubdir2 file2.ext
 1カラム目の数値は\tの数
 2カラム目はフォルダーかファイルの名前
 
-0 dir 
-1 subdir1
-2 file1.ext
-2 subsubdir1
-1 subdir2
-2 subsubdir2
-3 file2.ext
+0 dir               +1
+1 subdir1           +1    
+2 file1.ext         +1
+2 subsubdir1         0
+1 subdir2           -1
+2 subsubdir2        +1
+3 file2.ext         +1
 
 [データ保管(リスト)]
 input_list = [[0, dir], [1,subdir1] ...]
@@ -35,7 +35,8 @@ output_list = [
 
 [処理]
 output_list_index = 0
-t_num = -1 
+t_num = -1
+先頭のデータを処理するために'\n'をアペンドする
 リストを順に処理
     \tの数チェック(inputlist[x][0]-t_num)
         +1      名称をoutput_listのoutput_list_indexのリストに追加
@@ -86,6 +87,7 @@ from typing import Type
 import unittest
 import logging
 import re
+import copy
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
@@ -112,6 +114,60 @@ class Solution(object):
         if file_system == '':
             return 0
 
+        """
+        アウトプット用リスト準備
+        アウトプット用リストのインデックス初期化
+        tの数のカウンター初期化
+        """
+        olst = [[]]
+        olst_idx = 0
+        t_num = 0
+        """ 先頭のデータを処理するために'\n'をアペンドする """
+        file_system = '\n' + file_system
+
+        """ リストを順に処理 """
+        regex = r'\n\t*[\w.]+'
+        m = re.findall(regex, file_system)
+
+        for n in m:
+            """ \tの数チェック(inputlist[x][0]-t_num) """
+            print('-------- n.count(t):',n.count('\t'),' , t_num:', t_num,', gap:',(n.count('\t') - t_num ),', word:', re.sub('\n\t*','',n), end='')
+            if ( gap := (n.count('\t') - t_num )) == 1:
+                olst[olst_idx].append(re.sub('\n\t*','',n))
+            elif gap == 0:
+                if n.count('\t') ==0:
+                    olst[olst_idx].append(re.sub('\n\t*','',n))
+                else:
+                    olst.append(copy.deepcopy(olst[olst_idx]))
+                    olst_idx = olst_idx + 1
+                    olst[1][-1] = re.sub('\n\t*','',n)
+            elif gap == -1:
+                olst.append(copy.deepcopy(olst[olst_idx][0:n.count('\t')]))
+                olst_idx = olst_idx + 1
+                olst[olst_idx].append(re.sub('\n\t*','',n))                
+
+            else:
+                print(' --- else', end='')
+            print(' olst : ', olst)
+            # print('\n')
+            """ t_num更新 (t_num=inputlist[x][0]) """
+            t_num = t_num + gap
+                
+
+        """
+                +1      名称をoutput_listのoutput_list_indexのリストに追加
+                同じ    (output_listのエレメントをコピーしてコピーされたエレメントの最終エレメント(リスト内リスト)を更新する)
+                        output_list.append(output_list[output_list_index])
+                        output_list_index += 1
+                        output_list[output_list_index][-1] = 名称
+                -1      (output_listのエレメントを範囲指定でコピーして名称をアペンドする)
+                        output_list.append(output_list[output_list_index][0:1])  
+                        output_list_index += 1
+                        output_list[output_list_index].append(名称)
+        """
+
+
+"""
         dic = {}
 
         m = re.match(r'^\w+', file_system)
@@ -119,12 +175,16 @@ class Solution(object):
 
         dic[0] = m.group()
 
-        regex = r'\n\t+[\w.]+'
+        print('1: ',file_system)
+        file_system = '\n' + file_system
+        print('2: ',file_system)
+        regex = r'\n\t*[\w.]+'
         m = re.findall(regex, file_system)
-        print(m)
+        print('3: ',m)
 
         for n in m:
-            print(n.count('\t'), re.sub('\n\t+','',n))
+            print(n.count('\t'), re.sub('\n\t*','',n))
+"""
 
 class TestSolution(unittest.TestCase):
 
