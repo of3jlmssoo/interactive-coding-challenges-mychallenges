@@ -1,4 +1,18 @@
+"""
+self.assertEqual(solution.longest_substr('abcabcdefgghiij', k=3), 6)
+abcabc defgghiij abcのk=3 charactersで6桁
+
+self.assertEqual(solution.longest_substr('abcabcdefgghighij', k=3), 7)
+abcabcdef　gghighi j 	ghiで最大7桁
+"""
 import unittest
+
+
+class Solution(object):
+
+    def longest_substr(self, string, k):
+        # TODO: Implement me
+        pass
 
 
 class TestSolution(unittest.TestCase):
