@@ -1,4 +1,44 @@
+"""
+
+[参照]
+https://trykv.medium.com/how-to-solve-minimum-coin-change-f96a758ccade
+
+coin change関連では一番読みやすく理解しやすいと感じた。
+
+リストを初期化。サイズはN+1。初期値はinfinity。インデックス0を0に
+コイン毎ループ
+    0からN+1までループ
+    if (リストのインデックス - coin) >= 0
+        リスト[リストのインデックス] = math.min(リスト[リストのインデックス], リスト[リストのインデックス-coin]+1)
+
+return リスト[N] if not infinity otherwise return -1
+
+"""
 import unittest
+import sys
+
+class CoinChanger(object):
+
+    def make_change(self, coins, total):
+        # TODO: Implement me
+        # pass
+
+        if coins == None or total == None:
+            raise TypeError(f'CoinChanger.object.make_change: coins == None or total == None')
+
+        if coins == [] or total==0:
+            return 0
+
+        min_coins = [sys.maxsize] * (total+1)
+        min_coins[0] = 0
+
+        for c in coins:
+            for i in range(total+1):
+                if i-c>=0:
+                    min_coins[i] = min(min_coins[i], min_coins[i-c]+1)
+
+        # print(min_coins[total])
+        return min_coins[total]
 
 
 class TestCoinChange(unittest.TestCase):
