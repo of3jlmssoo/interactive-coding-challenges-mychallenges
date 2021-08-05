@@ -5,6 +5,10 @@ https://trykv.medium.com/how-to-solve-minimum-coin-change-f96a758ccade
 
 coin change関連では一番読みやすく理解しやすいと感じた。
 
+test_coin_change.pyとの関係
+    test_coin_change.py     +
+    test_coin_change_min.py -
+
 リストを初期化。サイズはN+1。初期値はinfinity。インデックス0を0に
 コイン毎ループ
     0からN+1までループ
