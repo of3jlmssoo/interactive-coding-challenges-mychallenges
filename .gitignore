@@ -139,3 +139,7 @@ cython_debug/
 
 *.tar
 work*.py
+recursion_dynamic/hanoi/hanoi_readme.md
+recursion_dynamic/hanoi/hanoi_readme2.md
+recursion_dynamic/hanoi/hanoi_readme3.md
+recursion_dynamic/hanoi/hello.gv
