@@ -1,3 +1,12 @@
+"""
+[参照]
+https://en.wikipedia.org/wiki/Knapsack_problem
+https://loctv.wordpress.com/2019/12/14/knapsack-top-down-memoization-bottom-up/
+
+
+"""
+
+
 import unittest
 
 
@@ -34,8 +43,13 @@ class TestKnapsack(unittest.TestCase):
         items.append(Item(label='d', value=9, weight=5))
         total_weight = 8
         expected_value = 13
-        self.assertEqual(knapsack.fill_knapsack(items, total_weight), expected_value)
+        self.assertEqual(
+            knapsack.fill_knapsack(
+                items,
+                total_weight),
+            expected_value)
         print('Success: test_knapsack_top_down')
+
 
 def main():
     test = TestKnapsack()
