@@ -59,28 +59,33 @@ def solveks(profits, weights, capacity):
 
     n = len(profits)
     # dp = [[None] * (capacity + 1)] * len(profits)
-    W = [[None for j in range(capacity + 1)] for i in range(len(profits)+1)]
+    W = [[None for j in range(capacity + 1)] for i in range(len(profits) + 1)]
     print('W(0) ', W)
 
-    for w in range(capacity+1):
-      W[0][w] = 0
+    for w in range(capacity + 1):
+        W[0][w] = 0
     print('W(1) ', W)
 
-    for i in range(1,len(profits)+1):
-      for w in range(capacity+1):
-        print(f'i:{i}, w:{w} --- ',end='')
-        if weights[i-1] > w:
-          print(f'then: weights[i-1]:{weights[i-1]} > w:{w} --- ', end='')
-          print(f'W[{i}][{w}] = W[{i-1}][{w}]')
-          W[i][w] = W[i-1][w]
-        else:
-          print(f'else:                          W[{i}][{w}] = max(W[{i-1}][{w}], profits[{i-1}]+W[{i-1}][{w}-weights[{i-1}]]) --- max( {W[i-1][w]}, {profits[i-1]}+{W[i-1][w-weights[i-1]]} ) ')
-          W[i][w] = max(W[i-1][w], profits[i-1]+W[i-1][w-weights[i-1]])
-          # W[i][w] = max(W[i-1][w], profits[i-1]+W[i][w-weights[i-1]])
+    for i in range(1, len(profits) + 1):
+        for w in range(capacity + 1):
+            print(f'i:{i}, w:{w} --- ', end='')
+            if weights[i - 1] > w:
+                print(
+                    f'then: weights[i-1]:{weights[i-1]} > w:{w} --- ',
+                    end='')
+                print(f'W[{i}][{w}] = W[{i-1}][{w}]')
+                W[i][w] = W[i - 1][w]
+            else:
+                print(
+                    f'else:                          W[{i}][{w}] = max(W[{i-1}][{w}], profits[{i-1}]+W[{i-1}][{w}-weights[{i-1}]]) --- max( {W[i-1][w]}, {profits[i-1]}+{W[i-1][w-weights[i-1]]} ) ')
+                W[i][w] = max(W[i - 1][w], profits[i - 1] +
+                              W[i - 1][w - weights[i - 1]])
+                # W[i][w] = max(W[i-1][w], profits[i-1]+W[i][w-weights[i-1]])
 
     print('W(2) ', W)
     print(f'{len(profits)}, {capacity}')
     return W[len(profits)][capacity]
+
 
 """
 private int knapsackRecursive(int[] profits, int[] weights, int capacity, int currentIndex) {
@@ -163,7 +168,7 @@ print('40 == ', solveks([1, 6, 18, 22, 28], [1, 2, 5, 6, 7], 11),
 # print('13 == ', solveks([2, 4, 6, 9], [2, 2, 4, 5], 8),
 #       called_num, ' times called')
 
-print('14 == ', solveks([1, 3,7], [1, 2, 4], 8),
+print('14 == ', solveks([1, 3, 7], [1, 2, 4], 8),
       called_num, ' times called')
 
 """
@@ -175,44 +180,44 @@ W(1)  [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [None, None, None, None, None, None
 
 
 i:1, w:0 --- then: weights[i-1]:1 > w:0 --- W[1][0] = W[0][0]
-i:1, w:1 --- else:                          W[1][1] = max(W[0][1], profits[0]+W[0][1-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:2 --- else:                          W[1][2] = max(W[0][2], profits[0]+W[0][2-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:3 --- else:                          W[1][3] = max(W[0][3], profits[0]+W[0][3-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:4 --- else:                          W[1][4] = max(W[0][4], profits[0]+W[0][4-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:5 --- else:                          W[1][5] = max(W[0][5], profits[0]+W[0][5-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:6 --- else:                          W[1][6] = max(W[0][6], profits[0]+W[0][6-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:7 --- else:                          W[1][7] = max(W[0][7], profits[0]+W[0][7-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:8 --- else:                          W[1][8] = max(W[0][8], profits[0]+W[0][8-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:9 --- else:                          W[1][9] = max(W[0][9], profits[0]+W[0][9-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:10 --- else:                          W[1][10] = max(W[0][10], profits[0]+W[0][10-weights[0]]) --- max( 0, 1+0 ) 
-i:1, w:11 --- else:                          W[1][11] = max(W[0][11], profits[0]+W[0][11-weights[0]]) --- max( 0, 1+0 ) 
+i:1, w:1 --- else:                          W[1][1] = max(W[0][1], profits[0]+W[0][1-weights[0]]) --- max( 0, 1+0 )
+i:1, w:2 --- else:                          W[1][2] = max(W[0][2], profits[0]+W[0][2-weights[0]]) --- max( 0, 1+0 )
+i:1, w:3 --- else:                          W[1][3] = max(W[0][3], profits[0]+W[0][3-weights[0]]) --- max( 0, 1+0 )
+i:1, w:4 --- else:                          W[1][4] = max(W[0][4], profits[0]+W[0][4-weights[0]]) --- max( 0, 1+0 )
+i:1, w:5 --- else:                          W[1][5] = max(W[0][5], profits[0]+W[0][5-weights[0]]) --- max( 0, 1+0 )
+i:1, w:6 --- else:                          W[1][6] = max(W[0][6], profits[0]+W[0][6-weights[0]]) --- max( 0, 1+0 )
+i:1, w:7 --- else:                          W[1][7] = max(W[0][7], profits[0]+W[0][7-weights[0]]) --- max( 0, 1+0 )
+i:1, w:8 --- else:                          W[1][8] = max(W[0][8], profits[0]+W[0][8-weights[0]]) --- max( 0, 1+0 )
+i:1, w:9 --- else:                          W[1][9] = max(W[0][9], profits[0]+W[0][9-weights[0]]) --- max( 0, 1+0 )
+i:1, w:10 --- else:                          W[1][10] = max(W[0][10], profits[0]+W[0][10-weights[0]]) --- max( 0, 1+0 )
+i:1, w:11 --- else:                          W[1][11] = max(W[0][11], profits[0]+W[0][11-weights[0]]) --- max( 0, 1+0 )
 
 
 i:2, w:0 --- then: weights[i-1]:2 > w:0 --- W[2][0] = W[1][0]
 i:2, w:1 --- then: weights[i-1]:2 > w:1 --- W[2][1] = W[1][1]
-i:2, w:2 --- else:                          W[2][2] = max(W[1][2], profits[1]+W[1][2-weights[1]]) --- max( 1, 6+0 ) 
-i:2, w:3 --- else:                          W[2][3] = max(W[1][3], profits[1]+W[1][3-weights[1]]) --- max( 1, 6+1 ) 
-i:2, w:4 --- else:                          W[2][4] = max(W[1][4], profits[1]+W[1][4-weights[1]]) --- max( 1, 6+1 ) 
-i:2, w:5 --- else:                          W[2][5] = max(W[1][5], profits[1]+W[1][5-weights[1]]) --- max( 1, 6+1 ) 
-i:2, w:6 --- else:                          W[2][6] = max(W[1][6], profits[1]+W[1][6-weights[1]]) --- max( 1, 6+1 ) 
-i:2, w:7 --- else:                          W[2][7] = max(W[1][7], profits[1]+W[1][7-weights[1]]) --- max( 1, 6+1 ) 
-i:2, w:8 --- else:                          W[2][8] = max(W[1][8], profits[1]+W[1][8-weights[1]]) --- max( 1, 6+1 ) 
-i:2, w:9 --- else:                          W[2][9] = max(W[1][9], profits[1]+W[1][9-weights[1]]) --- max( 1, 6+1 ) 
-i:2, w:10 --- else:                          W[2][10] = max(W[1][10], profits[1]+W[1][10-weights[1]]) --- max( 1, 6+1 ) 
-i:2, w:11 --- else:                          W[2][11] = max(W[1][11], profits[1]+W[1][11-weights[1]]) --- max( 1, 6+1 ) 
+i:2, w:2 --- else:                          W[2][2] = max(W[1][2], profits[1]+W[1][2-weights[1]]) --- max( 1, 6+0 )
+i:2, w:3 --- else:                          W[2][3] = max(W[1][3], profits[1]+W[1][3-weights[1]]) --- max( 1, 6+1 )
+i:2, w:4 --- else:                          W[2][4] = max(W[1][4], profits[1]+W[1][4-weights[1]]) --- max( 1, 6+1 )
+i:2, w:5 --- else:                          W[2][5] = max(W[1][5], profits[1]+W[1][5-weights[1]]) --- max( 1, 6+1 )
+i:2, w:6 --- else:                          W[2][6] = max(W[1][6], profits[1]+W[1][6-weights[1]]) --- max( 1, 6+1 )
+i:2, w:7 --- else:                          W[2][7] = max(W[1][7], profits[1]+W[1][7-weights[1]]) --- max( 1, 6+1 )
+i:2, w:8 --- else:                          W[2][8] = max(W[1][8], profits[1]+W[1][8-weights[1]]) --- max( 1, 6+1 )
+i:2, w:9 --- else:                          W[2][9] = max(W[1][9], profits[1]+W[1][9-weights[1]]) --- max( 1, 6+1 )
+i:2, w:10 --- else:                          W[2][10] = max(W[1][10], profits[1]+W[1][10-weights[1]]) --- max( 1, 6+1 )
+i:2, w:11 --- else:                          W[2][11] = max(W[1][11], profits[1]+W[1][11-weights[1]]) --- max( 1, 6+1 )
 
 i:3, w:0 --- then: weights[i-1]:5 > w:0 --- W[3][0] = W[2][0]
 i:3, w:1 --- then: weights[i-1]:5 > w:1 --- W[3][1] = W[2][1]
 i:3, w:2 --- then: weights[i-1]:5 > w:2 --- W[3][2] = W[2][2]
 i:3, w:3 --- then: weights[i-1]:5 > w:3 --- W[3][3] = W[2][3]
 i:3, w:4 --- then: weights[i-1]:5 > w:4 --- W[3][4] = W[2][4]
-i:3, w:5 --- else:                          W[3][5] = max(W[2][5], profits[2]+W[2][5-weights[2]]) --- max( 7, 18+0 ) 
-i:3, w:6 --- else:                          W[3][6] = max(W[2][6], profits[2]+W[2][6-weights[2]]) --- max( 7, 18+1 ) 
-i:3, w:7 --- else:                          W[3][7] = max(W[2][7], profits[2]+W[2][7-weights[2]]) --- max( 7, 18+6 ) 
-i:3, w:8 --- else:                          W[3][8] = max(W[2][8], profits[2]+W[2][8-weights[2]]) --- max( 7, 18+7 ) 
-i:3, w:9 --- else:                          W[3][9] = max(W[2][9], profits[2]+W[2][9-weights[2]]) --- max( 7, 18+7 ) 
-i:3, w:10 --- else:                          W[3][10] = max(W[2][10], profits[2]+W[2][10-weights[2]]) --- max( 7, 18+7 ) 
-i:3, w:11 --- else:                          W[3][11] = max(W[2][11], profits[2]+W[2][11-weights[2]]) --- max( 7, 18+7 ) 
+i:3, w:5 --- else:                          W[3][5] = max(W[2][5], profits[2]+W[2][5-weights[2]]) --- max( 7, 18+0 )
+i:3, w:6 --- else:                          W[3][6] = max(W[2][6], profits[2]+W[2][6-weights[2]]) --- max( 7, 18+1 )
+i:3, w:7 --- else:                          W[3][7] = max(W[2][7], profits[2]+W[2][7-weights[2]]) --- max( 7, 18+6 )
+i:3, w:8 --- else:                          W[3][8] = max(W[2][8], profits[2]+W[2][8-weights[2]]) --- max( 7, 18+7 )
+i:3, w:9 --- else:                          W[3][9] = max(W[2][9], profits[2]+W[2][9-weights[2]]) --- max( 7, 18+7 )
+i:3, w:10 --- else:                          W[3][10] = max(W[2][10], profits[2]+W[2][10-weights[2]]) --- max( 7, 18+7 )
+i:3, w:11 --- else:                          W[3][11] = max(W[2][11], profits[2]+W[2][11-weights[2]]) --- max( 7, 18+7 )
 
 i:4, w:0 --- then: weights[i-1]:6 > w:0 --- W[4][0] = W[3][0]
 i:4, w:1 --- then: weights[i-1]:6 > w:1 --- W[4][1] = W[3][1]
@@ -220,12 +225,12 @@ i:4, w:2 --- then: weights[i-1]:6 > w:2 --- W[4][2] = W[3][2]
 i:4, w:3 --- then: weights[i-1]:6 > w:3 --- W[4][3] = W[3][3]
 i:4, w:4 --- then: weights[i-1]:6 > w:4 --- W[4][4] = W[3][4]
 i:4, w:5 --- then: weights[i-1]:6 > w:5 --- W[4][5] = W[3][5]
-i:4, w:6 --- else:                          W[4][6] = max(W[3][6], profits[3]+W[3][6-weights[3]]) --- max( 19, 22+0 ) 
-i:4, w:7 --- else:                          W[4][7] = max(W[3][7], profits[3]+W[3][7-weights[3]]) --- max( 24, 22+1 ) 
-i:4, w:8 --- else:                          W[4][8] = max(W[3][8], profits[3]+W[3][8-weights[3]]) --- max( 25, 22+6 ) 
-i:4, w:9 --- else:                          W[4][9] = max(W[3][9], profits[3]+W[3][9-weights[3]]) --- max( 25, 22+7 ) 
-i:4, w:10 --- else:                          W[4][10] = max(W[3][10], profits[3]+W[3][10-weights[3]]) --- max( 25, 22+7 ) 
-i:4, w:11 --- else:                          W[4][11] = max(W[3][11], profits[3]+W[3][11-weights[3]]) --- max( 25, 22+18 ) 
+i:4, w:6 --- else:                          W[4][6] = max(W[3][6], profits[3]+W[3][6-weights[3]]) --- max( 19, 22+0 )
+i:4, w:7 --- else:                          W[4][7] = max(W[3][7], profits[3]+W[3][7-weights[3]]) --- max( 24, 22+1 )
+i:4, w:8 --- else:                          W[4][8] = max(W[3][8], profits[3]+W[3][8-weights[3]]) --- max( 25, 22+6 )
+i:4, w:9 --- else:                          W[4][9] = max(W[3][9], profits[3]+W[3][9-weights[3]]) --- max( 25, 22+7 )
+i:4, w:10 --- else:                          W[4][10] = max(W[3][10], profits[3]+W[3][10-weights[3]]) --- max( 25, 22+7 )
+i:4, w:11 --- else:                          W[4][11] = max(W[3][11], profits[3]+W[3][11-weights[3]]) --- max( 25, 22+18 )
 
 i:5, w:0 --- then: weights[i-1]:7 > w:0 --- W[5][0] = W[4][0]
 i:5, w:1 --- then: weights[i-1]:7 > w:1 --- W[5][1] = W[4][1]
@@ -234,11 +239,11 @@ i:5, w:3 --- then: weights[i-1]:7 > w:3 --- W[5][3] = W[4][3]
 i:5, w:4 --- then: weights[i-1]:7 > w:4 --- W[5][4] = W[4][4]
 i:5, w:5 --- then: weights[i-1]:7 > w:5 --- W[5][5] = W[4][5]
 i:5, w:6 --- then: weights[i-1]:7 > w:6 --- W[5][6] = W[4][6]
-i:5, w:7 --- else:                          W[5][7] = max(W[4][7], profits[4]+W[4][7-weights[4]]) --- max( 24, 28+0 ) 
-i:5, w:8 --- else:                          W[5][8] = max(W[4][8], profits[4]+W[4][8-weights[4]]) --- max( 28, 28+1 ) 
-i:5, w:9 --- else:                          W[5][9] = max(W[4][9], profits[4]+W[4][9-weights[4]]) --- max( 29, 28+6 ) 
-i:5, w:10 --- else:                          W[5][10] = max(W[4][10], profits[4]+W[4][10-weights[4]]) --- max( 29, 28+7 ) 
-i:5, w:11 --- else:                          W[5][11] = max(W[4][11], profits[4]+W[4][11-weights[4]]) --- max( 40, 28+7 ) 
+i:5, w:7 --- else:                          W[5][7] = max(W[4][7], profits[4]+W[4][7-weights[4]]) --- max( 24, 28+0 )
+i:5, w:8 --- else:                          W[5][8] = max(W[4][8], profits[4]+W[4][8-weights[4]]) --- max( 28, 28+1 )
+i:5, w:9 --- else:                          W[5][9] = max(W[4][9], profits[4]+W[4][9-weights[4]]) --- max( 29, 28+6 )
+i:5, w:10 --- else:                          W[5][10] = max(W[4][10], profits[4]+W[4][10-weights[4]]) --- max( 29, 28+7 )
+i:5, w:11 --- else:                          W[5][11] = max(W[4][11], profits[4]+W[4][11-weights[4]]) --- max( 40, 28+7 )
 W(2)  [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 1, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7], [0, 1, 6, 7, 7, 18, 19, 24, 25, 25, 25, 25], [0, 1, 6, 7, 7, 18, 22, 24, 28, 29, 29, 40], [0, 1, 6, 7, 7, 18, 22, 28, 29, 34, 35, 40]]
 5, 11
 40 ==  40 0  times called
