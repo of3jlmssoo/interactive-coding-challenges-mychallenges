@@ -17,8 +17,8 @@ public int solveKnapsack(int[] profits, int[] weights, int capacity) {
 
 def solveks(profits, weights, capacity):
     # print(profits, weights, capacity)
-    dp = [[None] * (capacity + 1)] * len(profits)
-    # print(dp)
+    # dp = [[-1] * (capacity + 1)] * len(profits)
+    dp = [[None for j in range(capacity + 1)] for i in range(len(profits) + 1)]
     return ksr(dp, profits, weights, capacity, 0)
 
 
@@ -86,8 +86,8 @@ def ksr(dp, profits, weights, capacity, currentindex):
     result2 = ksr(dp, profits, weights, capacity, currentindex + 1)
 
     dp[currentindex][capacity] = max(result1, result2)
-    # print(f'will be returned {max(result1, result2)}')
-    # return max(result1, result2)
+
+    # print(f'{dp} will be returned {max(result1, result2)} and result1:{result1} result2:{result2} currentindex:{currentindex} capacity:{capacity}')
     return dp[currentindex][capacity]
 
 
