@@ -54,7 +54,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 
 class Item(object):
@@ -114,6 +114,7 @@ class KnapsackTopDown(object):
         dp[currentindex][capacity] = max(result1, result2)
 
         # print(f'will return {dp[currentindex][capacity]}')
+        checkLogStatus(f'will return {dp[currentindex][capacity]}')
         return dp[currentindex][capacity]
 
 
@@ -143,24 +144,23 @@ class Knapsack(object):
         # print(result[1].label)
 
     def findItemfromvalue(self, input_items, lst):
-        result = []
-        for l in lst:
-            for i in input_items:
-                if l == i.value:
-                    result.append(i)
-                    continue
-        return result
+        # result = []
+        # for l in lst:
+        #     for i in input_items:
+        #         if l == i.value:
+        #             result.append(i)
+        #             continue
+        # return result
+        result2 = [v for v in input_items[::-1] if v.value in lst]
+        # print(result, result2)
+        return result2
 
     def solveksbu(self, profits, weights, capacity):
-        # print('P:', profits, 'W:', weights, 'C:', capacity)
         checkLogStatus(
             f'solveksbu() args: P: {profits}, W: {weights}, C: {capacity}')
         if (capacity <= 0 or len(profits) == 0 or len(weights) != len(profits)):
             return 0
-        # print('P:', profits, 'W:', weights, 'C:', capacity)
 
-        # n = len(profits)
-        # dp = [[None] * (capacity + 1)] * len(profits)
         W = [[None for j in range(capacity + 1)]
              for i in range(len(profits) + 1)]
         X = [[[] for j in range(capacity + 1)]
@@ -172,89 +172,34 @@ class Knapsack(object):
 
         for w in range(capacity + 1):
             W[0][w] = 0
-        # print('W(1) ', W)
         checkLogStatus(f'W[0][x] updated :{W}\n')
 
         for i in range(1, len(profits) + 1):
             for w in range(capacity + 1):
-                # print(f'i:{i}, w:{w} --- ', end='')
                 checkLogStatus(
                     f'second loop started. i:{i}, w:{w} --- ', 'end')
                 if weights[i - 1] > w:
-                    # print(
-                    #     f'then: weights[i-1]:{weights[i-1]} > w:{w} --- ',
-                    #     end='')
                     checkLogStatus(
                         f'then: weights[i-1]:{weights[i-1]} > w:{w} --- ', 'end')
-                    # print(f'W[{i}][{w}] = W[{i-1}][{w}]')
                     checkLogStatus(f'W[{i}][{w}] = W[{i-1}][{w}]')
                     W[i][w] = W[i - 1][w]
                     X[i][w].append(W[i - 1][w])
                 else:
-                    # print(
-                    # f'else:                          W[{i}][{w}] =
-                    # max(W[{i-1}][{w}],
-                    # profits[{i-1}]+W[{i-1}][{w}-weights[{i-1}]]) --- max(
-                    # {W[i-1][w]}, {profits[i-1]}+{W[i-1][w-weights[i-1]]} ) ')
                     checkLogStatus(
                         f'else:                          W[{i}][{w}] = max(W[{i-1}][{w}], profits[{i-1}]+W[{i-1}][{w}-weights[{i-1}]]) --- max( {W[i-1][w]}, {profits[i-1]}+{W[i-1][w-weights[i-1]]} ) ')
                     W[i][w] = max(W[i - 1][w], profits[i - 1] +
                                   W[i - 1][w - weights[i - 1]])
-                    # W[i][w] = max(W[i-1][w], profits[i-1]+W[i][w-weights[i-1]])
                     if W[i][w] == W[i - 1][w]:
                         X[i][w].append(W[i - 1][w])
                     else:
                         X[i][w].append(profits[i - 1])
                         X[i][w].append(W[i - 1][w - weights[i - 1]])
 
-        # print('W(2) ', W)
-        # print(f'{len(profits)}, {capacity} {W[len(profits)][capacity]} ')
         checkLogStatus(f'W(1)             {W}')
         checkLogStatus(
             f'before return len(profits:{len(profits)}, capacity:{capacity} W[len(profits)][capacity]:{W[len(profits)][capacity]}\n')
         # return W[len(profits)][capacity]
         return X
-
-        # # print('P:', profits, 'W:', weights, 'C:', total_weight)
-        # # if (total_weight <= 0 or len(profits) == 0 or len(weights) !=
-        # # len(profits)):
-        #     # return 0
-        # # print('P:', profits, 'W:', weights, 'C:', total_weight)
-
-        # # n = len(profits)
-        # n = len(input_items)
-        # W = [[None for j in range(total_weight + 1)]
-        #      for i in range(len(input_items) + 1)]
-        # print('W(0) ', W)
-
-        # for w in range(total_weight + 1):
-        #     W[0][w] = 0
-
-        # print('W(1) ', W)
-
-        # for i in range(1, len(input_items) + 1):
-        #     for w in range(total_weight + 1):
-        #         print(f'i:{i}, w:{w} --- ', end='')
-        #         # if weights[i - 1] > w:
-        #         if input_items[i - 1].weight > w:
-        #             # print(
-        #             #     f'then: weights[i-1]:{weights[i-1]} > w:{w} --- ',
-        #             #     end='')
-        #             print(f'W[{i}][{w}] = W[{i-1}][{w}]')
-        #             W[i][w] = W[i - 1][w]
-        #         else:
-        #             # print(
-        #             # f'else:                          W[{i}][{w}] =
-        #             # max(W[{i-1}][{w}],
-        #             # profits[{i-1}]+W[{i-1}][{w}-weights[{i-1}]]) --- max(
-        #             # {W[i-1][w]}, {profits[i-1]}+{W[i-1][w-weights[i-1]]} ) ')
-        #             W[i][w] = max(W[i - 1][w], input_items[i - 1].value +
-        #                           W[i - 1][w - input_items[i - 1].weight])
-        #             # W[i][w] = max(W[i-1][w], profits[i-1]+W[i][w-weights[i-1]])
-
-        # print('W(2) ', W)
-        # # print(f'{len(profits)}, {total_weight}')
-        # return W[len(input_items)][total_weight]
 
 
 class TestKnapsack(unittest.TestCase):
@@ -301,7 +246,7 @@ class TestKnapsack(unittest.TestCase):
 def main():
     test = TestKnapsack()
     test.test_knapsack_bottom_up()
-    # test.test_knapsack_top_down()
+    test.test_knapsack_top_down()
 
 
 if __name__ == '__main__':
