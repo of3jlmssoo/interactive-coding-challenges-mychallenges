@@ -5,6 +5,8 @@
 - suffix treeをギブアップしたのは、suffix treeを理解し、それをpythonで活用するのに長い時間を要すると考えたため
 - hanoi、knapsackで時間を要しているのでここは先に進むことを重要視する
 
+[課題]
+- recursionになっていない
 
 
 --- 以下はsuffix treeに関してまとめたもの ---
