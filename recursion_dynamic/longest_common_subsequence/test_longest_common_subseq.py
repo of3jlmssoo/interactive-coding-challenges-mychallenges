@@ -70,22 +70,22 @@ class StringCompare(object):
 
         argcheck = [str0 is None, str1 is None]
         if any(argcheck):
-            raise TypeError(f'StringCompare.longest_common_subseq. arg error {str0} {str1}')
+            raise TypeError(
+                f'StringCompare.longest_common_subseq. arg error {str0} {str1}')
 
-        argcheck = [str0=='', str1 == '']
+        argcheck = [str0 == '', str1 == '']
         if any(argcheck):
             return ''
 
-        longstr, shortstr= self.set_str(str0, str1)
-        print(longstr, shortstr)
+        longstr, shortstr = self.set_str(str0, str1)
+        logger.debug(f'longstr:{longstr}, shortstr:{shortstr}')
 
-
-        matches =[]
-        match_len = 2  
+        matches = []
+        match_len = 2
         """ 最低2文字連続を前提とする """
 
         """
-        longstr     ABCDEFGHIJ 
+        longstr     ABCDEFGHIJ
         shortstr    FOOBCDBCDE
 
         順々に処理していく。最初は2文字連続で同じ文字列があるかどうかを見る。
@@ -93,7 +93,7 @@ class StringCompare(object):
         双方にあるかどうかをチェックする。以下同様。
 
         iのループ : shortstrを順に処理
-        whileループ : 
+        whileループ :
             例えばi=3の場合、shortstrの最初B(shortstr[3])からBC, BCD, BCDB, BCDBC, BCDBCD, BCDBCDEと順に処理する
                 i:上の例の場合Bの位置を保持
                 match_len : 何文字連続するかを保持。1文字一致は対象外とするため2から。match_lenの値以上に
@@ -104,11 +104,13 @@ class StringCompare(object):
                 else    break(このelse breakで処理削減)
 
         """
-        for i in range(len(shortstr)):      
-            while (coverage:=i+match_len) <= len(shortstr):
-                print('i:',i,'match_len:',match_len,shortstr[i:coverage])
+        for i in range(len(shortstr)):
+            while (coverage := i + match_len) <= len(shortstr):
+                logger.debug(
+                    f'i:{i} match_len:{match_len} {shortstr[i:coverage]}')
 
-                if shortstr[i:coverage] not in matches and longstr.find(shortstr[i:coverage]) >= 0:
+                if shortstr[i:coverage] not in matches and longstr.find(
+                        shortstr[i:coverage]) >= 0:
                     matches.append(shortstr[i:coverage])
                     match_len += 1
                 else:
@@ -123,12 +125,12 @@ class StringCompare(object):
         """ 最初に長さに応じてlongstr、shortstrをセット(if/elif)
             長さが同じ場合使われている文字数に応じてセット(elif/elif)
             文字数も同じ場合longstr, shortstr = str0, str1(else)"""
-        if len(str0) > len(str1):               
+        if len(str0) > len(str1):
             """ 長さチェック """
             longstr, shortstr = str0, str1
         elif len(str0) < len(str1):
             longstr, shortstr = str1, str0
-        elif (str0len:=len(collections.Counter(list(str0)))) > (str1len:=len(collections.Counter(list(str1)))):
+        elif (str0len := len(collections.Counter(list(str0)))) > (str1len := len(collections.Counter(list(str1)))):
             """ 使われている文字数チェック """
             longstr, shortstr = str0, str1
         elif str0len < str1len:
