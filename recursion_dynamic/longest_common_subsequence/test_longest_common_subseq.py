@@ -7,6 +7,7 @@
 
 [課題]
 - recursionになっていない
+TODO recursionにする
 
 
 --- 以下はsuffix treeに関してまとめたもの ---
