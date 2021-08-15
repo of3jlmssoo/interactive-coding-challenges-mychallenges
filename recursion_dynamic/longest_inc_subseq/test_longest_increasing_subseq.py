@@ -15,12 +15,14 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 
 class SeqProcessStatus(enum.Enum):
     NOTPROCESSED = enum.auto()
     PROCESSED = enum.auto()
+    CONTINUING = enum.auto()
+    BREAKED = enum.auto()
 
 
 class Subsequence(object):
@@ -41,11 +43,12 @@ class Subsequence(object):
         return self.find_longest_inc_subseq(seq)
 
     def find_longest_inc_subseq(self, seq):
+        logger.debug(f'Subsequence.find_longest_inc_subseq: {seq}\n')
         seq_len = len(seq)
         max_len = 0
         result = []
         seq_proc_status = [SeqProcessStatus.NOTPROCESSED] * seq_len
-        print(seq_proc_status)
+        logger.debug(seq_proc_status)
 
         """
         seq = [3, 4, -1, 0, 6, 2, 3]
@@ -54,10 +57,14 @@ class Subsequence(object):
             次は2より小さいか。0。次は0より小さいか...
         2)  最初に3,2,0,-1が見つかりこの長さは4。残りが5文字無いと最大長更新は無いので
             処理を行わない
-        3)  TODO:   後ろから2番目の2は3の流れに入っているので無視して良い
-                    0は6,0,...の流れが新たにでるので処理が必要
+        3)  TODO:done 処理効率化
+                    [3, 4, -1, 0, 6, 2, 3]
+                    後ろから2番目の2は3の流れに入っているので無視して良い
+                    0は3からの流れと6からの流れの双方に関わるため無視しない
+
                     [3, 4, -1, 0, 100, 101, 102, 2, 3]
                     [-1,0,100,101,102] # 5
+
         4)  その他:追加テストデータ
                     [-1, 0, 100, 101, 102, 2, 3]
                     [-1,0,100,101,102] # 5
@@ -70,23 +77,23 @@ class Subsequence(object):
             current_n = m
             tmpresult.insert(0, m)
 
-            cont_flag = 1
+            cont_flag = SeqProcessStatus.CONTINUING
 
-            if seq_len - i > max_len:
+            if seq_len - i > max_len and \
+                    seq_proc_status[i] == SeqProcessStatus.NOTPROCESSED:  # and以下の条件追加でChallengeのデータで5ループ節約
                 for j, n in enumerate(seq[-2 - i::-1]):
-                    # logger.debug(f'i:{i}, m:{m}, n:{n}')
-
-                    # if seq[-2 - i::-1][j - 1] < tmpresult[0]:
-                    #     print(
-                    #         f'------ {seq[-2 - i::-1][j - 1]} < {tmpresult[0]} --- tmpresult:{tmpresult}')
-                    #     break
-
                     if current_n > n:
                         tmpresult.insert(0, n)
                         current_n = n
-                        seq_proc_status[i] = SeqProcessStatus.PROCESSED
-                    print(
-                        f'n:{n} \t seq[-2 - i::-1][j-1]:{seq[-2 - i::-1][j-1]} \t---  tmpresult[0]: {tmpresult[0]} \t--- i:{i} j:{j} tmpresult: {tmpresult}')
+                        if cont_flag == SeqProcessStatus.CONTINUING:
+                            seq_proc_status[i + j + 1] = \
+                                SeqProcessStatus.PROCESSED
+                            logger.debug(
+                                f'i:{i} j:{j} i+j:{i+j} n:{n} seq_proc_status:{seq_proc_status}')
+                    else:
+                        cont_flag = SeqProcessStatus.BREAKED
+                    logger.debug(
+                        f'n:{n} \t seq[-2 - i::-1][j-1]:{seq[-2 - i::-1][j-1]} \t  tmpresult[0]: {tmpresult[0]} \t i:{i} j:{j} tmpresult: {tmpresult}')
             if max_len < (l := len(tmpresult)):
                 max_len = l
                 result = tmpresult
