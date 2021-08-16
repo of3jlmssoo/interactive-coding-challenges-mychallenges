@@ -30,9 +30,12 @@ a) スライス指定をやめてインデックス指定にする
 b) stringを追加引数で渡し、スライス処理は残しておく。追加指定されたstringでさかのぼる
 a)案で変更を行う。
 
-ステップ1:総当り方式のままスライス指定をインデックス指定に変更する
-ステップ2:総当り方式の処理量を簡易に計測する
-ステップ3:総当り方式をやめる
+- 総当り方式のままスライス指定をインデックス指定に変更する
+- 総当り方式の処理量を簡易に計測する
+- 総当り方式をやめる
+
+test_longest_substr.py "called string" x 515 (全テストケース合計)
+test_longest_substr2.py "called string" x 115 (全テストケース合計)
 
 """
 import logging
@@ -48,7 +51,7 @@ logger.propagate = False
 # DEBUG INFO WARNIG ERROR CRTICAL
 logger.setLevel(logging.DEBUG)
 ch.setLevel(logging.DEBUG)
-logger.disabled = False
+logger.disabled = True
 
 
 class Solution(object):
@@ -64,56 +67,86 @@ class Solution(object):
         if string == '':
             return 0
 
-        result = 0
-        for i in range(len(string)):
-            k_chars = [None] * k
-            result = max(result,
-                         self._longest_substr(string[i:], k, k_chars, 0, 0))
-        return result
-
         # result = 0
-        # k_chars = [None] * k
-        # result = max(result, self._longest_substr(string, k, k_chars, 0, 0))
+        # for i in range(len(string)):
+        #     k_chars = [None] * k
+        #     result = max(result,
+        #                  self._longest_substr(string[i:], k, k_chars, 0, 0))
         # return result
+
+        result = 0
+        k_chars = [None] * k
+        result = max(result, self._longest_substr(string, k, k_chars, 0, 0))
+        return result
 
     def _longest_substr(self, string, k, k_chars, substr_len, idx):
 
-        if string[0] in k_chars or k_chars.count(None) > 0:
+        # print(
+        # f'called string:{string}, k:{k}, k_chars:{k_chars},
+        # substr_len:{substr_len}, idx:{idx}')
+
+        if string[idx] in k_chars or k_chars.count(None) > 0:
             """ 既出文字か文字種数制限内の場合 """
-            if string[0] not in k_chars:
+            if string[idx] not in k_chars:
                 """ 文字種制限内で新文字の場合 """
-                k_chars[k_chars.index(None)] = string[0]
+                k_chars[k_chars.index(None)] = string[idx]
             substr_len += 1
 
-            if len(string) > 1:
+            # if len(string) > 1:
+            if len(string) > idx + 1:
                 """ まだ先がある場合 """
                 # substr_len += 1
                 return self._longest_substr(
-                    string[1:], k, k_chars, substr_len, idx + 1)
+                    string, k, k_chars, substr_len, idx + 1)
             else:
                 return substr_len
-        elif len(string) > 1:
+        # elif len(string) > 1:
+        elif idx + 1 < len(string):
             """ 新文字で残り2文字以上のケース """
+            """ self.find_next_positionとnew_idxでさかのぼり"""
+            new_idx = self.find_next_position(string, k_chars, idx)
             k_chars = [None] * k
             return max(substr_len,
-                       self._longest_substr(string, k, k_chars, 0, idx))
+                       self._longest_substr(string, k, k_chars, 0, new_idx))
         else:
             """ 新文字で残り1文字のケース """
             return substr_len
 
-    def find_next_position(self):
-        pass
+        """
+        0123456789012345678
+        abcabcdefgghiijhiij
+                   A  A
+                   |  idx=14
+                   this index, 11, should be returned
+                   k_chars:['g', 'h', 'i']
+        """
+
+    def find_next_position(self, string, k_chars, idx):
+        # pass
+        logger.debug(
+            f'find_next_position 1: string: {string}, k_chars:{k_chars}, idx:{idx}')
+        logger.debug(
+            f'find_next_position 2: string[0:idx]: {string[0:idx]}, k_chars[0]:{k_chars[0]}')
+        # lst = [i for i, x in enumerate(string[0:idx]) if x == k_chars[0]]
+        # print(f'lst: {lst}')
+        # return lst[-1] + 1
+        # lst = [i for i, x in enumerate(string[0:idx]) if x == k_chars[0]]
+        # print(f'lst: {lst}')
+        return [i for i, x in enumerate(
+            string[0:idx]) if x == k_chars[0]][-1] + 1
 
 
 class TestSolution(unittest.TestCase):
 
     def test_longest_substr(self):
         solution = Solution()
-        # self.assertRaises(TypeError, solution.longest_substr, None)
+        self.assertRaises(TypeError, solution.longest_substr, None)
         self.assertRaises(TypeError, solution.longest_substr, None, None)
         self.assertRaises(TypeError, solution.longest_substr, 'abc', 'abc')
         self.assertEqual(solution.longest_substr('', k=3), 0)
         self.assertEqual(solution.longest_substr('abcabcdefgghiij', k=3), 6)
+
+        """ 以下追加テストケース """
         self.assertEqual(
             solution.longest_substr(
                 'abcabcdefgghiijhiij', k=3), 8)
