@@ -6,7 +6,7 @@ recursionにはなっている。。。しかし、計算量削減の余地あ�
 abcabc  6       next d
 def     3       next g
 gghii   5       next j
-jhiij   5       
+jhiij   5
 
 ただしhiijhiijの8がMAX
 思いつく対応方法は以下の2つ
@@ -55,10 +55,14 @@ class Solution(object):
         result = 0
         for i in range(len(string)):
             k_chars = [None] * k
-            result = max(result, self._longest_substr(string[i:], k, k_chars, 0))
+            result = max(result, self._longest_substr(
+                string[i:], k, k_chars, 0))
         return result
 
     def _longest_substr(self, string, k, k_chars, substr_len):
+        # print(
+        # f'called string:{string}, k:{k}, k_chars:{k_chars},
+        # substr_len:{substr_len}')
 
         if string[0] in k_chars or k_chars.count(None) > 0:
             """ 既出文字か文字種数制限内の場合 """
@@ -76,11 +80,10 @@ class Solution(object):
         elif len(string) > 1:
             """ 新文字で残り2文字以上のケース """
             k_chars = [None] * k
-            return max(substr_len, self._longest_substr(string, k, k_chars,0))
+            return max(substr_len, self._longest_substr(string, k, k_chars, 0))
         else:
             """ 新文字で残り1文字のケース """
             return substr_len
-
 
 
 class TestSolution(unittest.TestCase):
@@ -92,6 +95,8 @@ class TestSolution(unittest.TestCase):
         self.assertRaises(TypeError, solution.longest_substr, 'abc', 'abc')
         self.assertEqual(solution.longest_substr('', k=3), 0)
         self.assertEqual(solution.longest_substr('abcabcdefgghiij', k=3), 6)
+
+        """ 以下追加テストケース """
         self.assertEqual(
             solution.longest_substr(
                 'abcabcdefgghiijhiij', k=3), 8)
