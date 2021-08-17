@@ -1,4 +1,28 @@
+"""
+[参照]
+https://algorithms.tutorialhorizon.com/magic-index-find-index-in-sorted-array-such-that-ai-i/
+
+とはいえ、magic indexをindexの低い方から1つ見つければ良いという課題のため、インデックス0から順に処理する形態で済ますことにする。
+
+"""
 import unittest
+
+
+class MagicIndex(object):
+
+    def find_magic_index(self, array):
+        # TODO: Implement me
+        # pass
+        argcheck = [array is None, array == []]
+        if any(argcheck):
+            return -1
+
+        """ 内包表記で1個選んだらbreakの処理をかけなかったので。。。
+        """
+        for i, n in enumerate(array):
+            if i == n:
+                return n
+        return -1
 
 
 class TestFindMagicIndex(unittest.TestCase):
