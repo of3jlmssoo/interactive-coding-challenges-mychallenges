@@ -15,12 +15,13 @@ https://jovian.ai/justcallmerob/max-profit-with-k-transactions
     ③ MAX時の-price[x] => BUY (day)x (price)price[x]
     ④ 前のトランザクションでのmax profits
 
+    challangeでのtransactionデータ
     buy day 0 @ 2
     sel day 2 @ 7       profit 5
-    
+
     buy day 3 @ 1
     sel day 4 @ 4       profit 8
-    
+
     buy day 6 @ 1
     sel day 7 @ 3       profit 10
 
@@ -32,8 +33,21 @@ self.combination
 
 """
 import sys
+import logging
 import unittest
 from enum import Enum  # Python 2 users: Run pip install enum34
+
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler()
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+logger.propagate = False
+# DEBUG INFO WARNIG ERROR CRTICAL
+logger.setLevel(logging.DEBUG)
+ch.setLevel(logging.DEBUG)
+logger.disabled = True
 
 
 class Type(Enum):
@@ -79,52 +93,64 @@ class StockTrader(object):
         self.transactions = []
 
         self.profits = [[0] * len(prices) for i in range(k + 1)]
-        self.combination = [[None] * len(prices) for i in range(k + 1)] # tranactionデータを記録する
-        
-        self.profits[0] = [0] * len(prices) # 元々0で作成しているが特定行、特定列を0で明示的に初期化
+        self.combination = [
+            [None] * len(prices) for i in range(k + 1)
+        ]  # tranactionデータを記録する
+
+        self.profits[0] = [0] * len(prices)  # 元々0で作成しているが特定行、特定列を0で明示的に初期化
         for p in self.profits[1:]:
             p[0] = 0
-        self.print_profits()
+        if not logger.disabled:
+            self.print_profits()
 
-        """ 以下の処理を実現  
-            profits[i][j] = max(profits[i][j-1], prices[j]+max(-prices[x] + profits[i-1][x])) where 0 <= x < j 
+        """ 以下の処理を実現
+            profits[i][j] = max(profits[i][j-1], prices[j]+max(-prices[x] + profits[i-1][x])) where 0 <= x < j
                                 first            second
         """
         for i in range(1, k + 1):
             for j in range(1, len(prices)):
                 # print(f'i:{i} j:{j}')
                 first = self.get_first(i, j)
-                second = self.get_second(i, j) 
+                second = self.get_second(i, j)
                 """ get_second()内でprofit更新があると上記処理に加えrecord_proc()がコールされてself.combinationに記録する """
                 if first > second:
                     self.profits[i][j] = first
                 else:
                     self.profits[i][j] = second
-        self.print_profits()
+        if not logger.disabled:
+            self.print_profits()
         """ transactionを作るため register_tx()をコール """
         self.register_tx()
-        print(f'after search_buy_sell_info  {self.transactions}')
+        if not logger.disabled:
+            print(f'after search_buy_sell_info  {self.transactions}')
         return self.profits[-1][-1], self.transactions
 
-
     def register_tx(self):
-        i = self.k;
-        j = len(self.prices)-1
+        i = self.k
+        j = len(self.prices) - 1
         while self.profits[i][j] != 0:
             """ profit=0の状態になるまで繰り返し処理する """
-            print(f'in while {self.combination[i][j]}')
+            if not logger.disabled:
+                print(f'in while {self.combination[i][j]}')
 
             """ max profitsの状態から始めてprofit=0まで繰り返す
                 class Transaction(object): def __init__(self, type, day, price): """
-            self.transactions.append(Transaction(self.combination[i][j][0],self.combination[i][j][1],self.combination[i][j][2]))
-            self.transactions.append(Transaction(self.combination[i][j][3],self.combination[i][j][4],self.combination[i][j][5]))
+            self.transactions.append(Transaction(
+                self.combination[i][j][0],
+                self.combination[i][j][1],
+                self.combination[i][j][2]))
+            self.transactions.append(Transaction(
+                self.combination[i][j][3],
+                self.combination[i][j][4],
+                self.combination[i][j][5]))
 
             """ 次の処理すべきデータをセットする """
-            i, j = self.search_tx_data(self.combination[i][j][6],self.combination[i][j][7])
+            i, j = self.search_tx_data(
+                self.combination[i][j][6], self.combination[i][j][7])
             # i=self.combination[i][j][6]
             # j=self.combination[i][j][7]
 
-    def search_tx_data(self,i,j):
+    def search_tx_data(self, i, j):
         """
             0   1   2   3   4   5   6   7
         --+-------------------------------
@@ -137,27 +163,25 @@ class StockTrader(object):
         この8になった最初の日をindexで探し、その値を新たなjとして返す(i=2,j=4が返される)
         register_tx()ではself.combination[2][4]のデータを処理する。以下同様
         i=1, j=3に行き(profitは5)、次に5になった日を探しi=1, j=2を得る。。。。
-        """ 
+        """
         return i, self.profits[i].index(self.profits[i][j])
 
-
     def get_second(self, i, j):
-        """ 以下の処理のsecondパートを実現  
-            profits[i][j] = max(profits[i][j-1], prices[j]+max(-prices[x] + profits[i-1][x])) where 0 <= x < j 
+        """ 以下の処理のsecondパートを実現
+            profits[i][j] = max(profits[i][j-1], prices[j]+max(-prices[x] + profits[i-1][x])) where 0 <= x < j
                                 first            second         p1          p2
                                                  prices[j]+result
         """
-        
+
         result = -sys.maxsize
         for x in range(j):
             if result < (
                     (p1 := -self.prices[x]) + (p2 := self.profits[i - 1][x])):
-                self.record_proc(i,j,x)                
+                self.record_proc(i, j, x)
                 result = p1 + p2
         return self.prices[j] + result
 
-
-    def record_proc(self,i,j,x):
+    def record_proc(self, i, j, x):
         """ 以下のようなリストを作成する。
             [<Type.BUY: 1>, 6, 1, <Type.SELL: 0>, 7, 3, 2, 6]]
 
@@ -168,7 +192,7 @@ class StockTrader(object):
             3 : <Type.SELL: 0>  引き続きのデータがSellのデータであることｗ表す。無くても順番で処理はできる
             4 : 7               Sellの日付
             5 : 3               Sellのプライス
-            6 : 2               前のトランザクションのprofitsのi。以下の④に相当 
+            6 : 2               前のトランザクションのprofitsのi。以下の④に相当
             7 : 6               前のトランザクションのprofitsのj。以下の④に相当
 
             profits[i][j]=max(①, ②+max(③+④))
@@ -178,17 +202,16 @@ class StockTrader(object):
         """
         # print(f'---i:{i} j:{j} x:{x} self.combination[i][j]:{self.combination[i][j]} ---')
         # sell_data = [Type.SELL,j,self.prices[j]]
-        # buy_data  = [Type.BUY,x,self.prices[x]] 
-        sell_data = [Type.SELL,j,self.prices[j]]
-        buy_data  = [Type.BUY,x,self.prices[x]] 
-        prev_data = [i-1,x]
-        self.combination[i][j] =  buy_data + sell_data + prev_data
+        # buy_data  = [Type.BUY,x,self.prices[x]]
+        sell_data = [Type.SELL, j, self.prices[j]]
+        buy_data = [Type.BUY, x, self.prices[x]]
+        prev_data = [i - 1, x]
+        self.combination[i][j] = buy_data + sell_data + prev_data
 
     def get_first(self, i, j):
         return self.profits[i][j - 1]
 
     def print_profits(self):
-        # [print(n) for n in self.profits]
         [print(p, c) for p, c in zip(self.profits, self.combination)]
         print('\n')
 
@@ -226,7 +249,7 @@ class TestMaxProfit(unittest.TestCase):
         print('Success: test_max_profit')
 
         """ 追加テスト """
-        prices = [1,2,1,2,1,7]
+        prices = [1, 2, 1, 2, 1, 7]
         profit, transactions = stock_trader.find_max_profit(prices, k)
         self.assertEqual(profit, 8)
         self.assertTrue(Transaction(Type.SELL,
