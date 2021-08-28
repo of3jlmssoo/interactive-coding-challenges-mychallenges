@@ -1,11 +1,11 @@
 """
 [前提]
-- 結果のリスト内の順序に意味があるとは思えないので、結果確認のところは修正している。
+- 結果のリスト内の順序に意味があるとは思えないので、結果確認のところは修正している(check_result())
 - Class SetsはClass Combinatoricにリネーム
 - test_power_setもWeb版に変更
+
 [参照]
 https://en.wikipedia.org/wiki/Power_set#/media/File:Hasse_diagram_of_powerset_of_3.svg
-
 Power setでは再帰とビットの2つの方法がある。
 
 (1)再帰
@@ -55,7 +55,8 @@ class Combinatoric(object):
         pass
 
     def check_result(self, expected, result):
-        print(f'{expected=} {result=}')
+        """ expectedとresultを比較 1)長さ、2)エレメント """
+        logger.debug(f'check_result: {expected=} {result=}')
         if len(expected) != len(result):
             return False
 
@@ -74,10 +75,10 @@ class Combinatoric(object):
         rest = copy.deepcopy(input_set)
         self._find_power_set_recursive(
             input_set, len(input_set), rest, '', result)
-        print(f'{result=}')
         return self.find_power_make_return(result)
 
     def find_power_make_return(self, result):
+        """ リスト化 """
         return [[] if r == set() else list(sorted(r)) for r in result]
         # return ['' if r == set() else list(sorted(r)) for r in result]
 
@@ -88,13 +89,16 @@ class Combinatoric(object):
             f'({idx}) {n=:} {c=:3} {input_set=:10} {rest=:10} {sofar=:10} {result=}')
 
     def _find_power_set_recursive(self, input_set, n, rest, sofar, result):
-        self.print_vars(1, n, input_set, rest, sofar, result)
+        if not logger.debug:
+            self.print_vars(1, n, input_set, rest, sofar, result)
+
         if set(sofar) not in result:
-            print(f'{" "*100} set(sofar):{set(sofar)} will be added to result')
+            logger.debug(
+                f'{" "*100} set(sofar):{set(sofar)} will be added to result')
             result.append(set(sofar))
 
         if n == 0:
-            print(f'{" "*100} n==0: result:{result}, sofar:{sofar}')
+            logger.debug(f'{" "*100} n==0: result:{result}, sofar:{sofar}')
             # result.append(sofar)
             return
 
@@ -102,7 +106,8 @@ class Combinatoric(object):
             rest = copy.deepcopy(input_set)
             if len(rest) > 1:
                 rest.remove(c)
-            self.print_vars(2, n, input_set, rest, sofar, result, c)
+            if not logger.debug:
+                self.print_vars(2, n, input_set, rest, sofar, result, c)
             for d in rest:
                 self._find_power_set_recursive(
                     rest, n - 1, rest, sofar + c, result)
