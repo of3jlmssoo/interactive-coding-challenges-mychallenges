@@ -1,3 +1,6 @@
+"""
+recursion_dynamicの中の順番を間違えた気がする。これをまず行うべきだった
+"""
 import unittest
 
 
