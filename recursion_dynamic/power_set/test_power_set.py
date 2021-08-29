@@ -52,7 +52,20 @@ class Combinatoric(object):
 
     def find_power_set_iterative(self, input_set):
         # TODO: Implement me
-        pass
+        # pass
+
+        result = []
+        for i in range(2**len(input_set)):
+            one = 1
+            tmp_result = []
+            for j in range(len(bin(i)[2:])):
+                # print(
+                # f'{i=}, {bin(i)=},  {j=}, {one=}, {one<<j=}, {i&(one<<j)}        i ==
+                # (one << j):{i == (one << j)}')
+                if i & (one << j):
+                    tmp_result += input_set[j]
+            result.append(tmp_result)
+        return result
 
     def check_result(self, expected, result):
         """ expectedとresultを比較 1)長さ、2)エレメント """
@@ -160,8 +173,10 @@ class TestPowerSet(unittest.TestCase):
         result = combinatoric.find_power_set_recursive(input_set)
         # self.assertEqual(result, expected)
         self.assertEqual(combinatoric.check_result(expected, result), True)
-        # result = combinatoric.find_power_set_iterative(input_set)
+
+        result = combinatoric.find_power_set_iterative(input_set)
         # self.assertEqual(result, expected)
+        self.assertEqual(combinatoric.check_result(expected, result), True)
 
 
 def main():
