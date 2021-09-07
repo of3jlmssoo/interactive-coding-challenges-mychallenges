@@ -10,7 +10,7 @@ pivotの右側はpivotより大きいものばかりになっているが順番�
 
 """
 import unittest
-import numpy as np
+# import numpy as np
 
 
 class QuickSort(object):
