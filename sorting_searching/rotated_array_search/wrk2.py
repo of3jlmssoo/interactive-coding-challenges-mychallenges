@@ -61,12 +61,12 @@ None
 
 
 def _search_sorted_array(data, val, start, end):
-    # result = None
+
     idx = start + (end - start) // 2
     print(
         f'_search_sorted_array called: {data[0:1]=} {val=} {start=} {end=} {idx=} ')
     if data[idx] == val:
-        print(f'1) retrun {idx=}')
+        print(f'1) return {idx=}')
         return idx
 
     if start >= end:
@@ -79,18 +79,24 @@ def _search_sorted_array(data, val, start, end):
         print(f'4) return None ')
         return None
 
-    _search_sorted_array(data, val, start, idx - 1)
-    _search_sorted_array(data, val, idx + 1, end)
+    result = _search_sorted_array(data, val, start, idx - 1)
+    print(f'4-2) {result=}')
+    if (result) is not None:
+        print(f'5) return {result=}')
+        return result
+    else:
+        print(f'6) else  {result=}')
+    return _search_sorted_array(data, val, idx + 1, end)
 
 
 #        0   1   2  3  4  5  6  7  8  9
 data = [10, 12, 14, 1, 3, 5, 6, 7, 8, 9]
 val = 1
 
-# data = [1, 1, 2, 1, 1, 1, 1, 1, 1, 1]
-# val = 2
+data = [1, 1, 2, 1, 1, 1, 1, 1, 1, 1]
+val = 2
 
-data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+# data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 # data=[10, 12, 14, 1, 3, 5, 6, 7, 8, 9]
 print(f'data=[ 0   1   2  3  4  5  6  7  8  9]')
 print(f'{data=}')
