@@ -79,9 +79,9 @@ def _search_sorted_array(data, val, start, end):
         print(f'4) return None ')
         return None
 
-    result = _search_sorted_array(data, val, start, idx - 1)
-    print(f'4-2) {result=}')
-    if (result) is not None:
+    # result = _search_sorted_array(data, val, start, idx - 1)
+    # print(f'4-2) {result=}')
+    if (result := _search_sorted_array(data, val, start, idx - 1)) is not None:
         print(f'5) return {result=}')
         return result
     else:
@@ -93,8 +93,8 @@ def _search_sorted_array(data, val, start, end):
 data = [10, 12, 14, 1, 3, 5, 6, 7, 8, 9]
 val = 1
 
-data = [1, 1, 2, 1, 1, 1, 1, 1, 1, 1]
-val = 2
+# data = [1, 1, 2, 1, 1, 1, 1, 1, 1, 1]
+# val = 2
 
 # data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 # data=[10, 12, 14, 1, 3, 5, 6, 7, 8, 9]
