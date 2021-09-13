@@ -25,8 +25,22 @@ class SortedMatrix(object):
         #     return (row, col)
         # else:
         #     return None
-        mtrx = [(h, i.index(val)) for h, i in enumerate(matrix) if val in i]
-        return mtrx[0] if mtrx else None
+        #
+        #
+        # mtrx = [(h, i.index(val)) for h, i in enumerate(matrix) if val in i]
+        # return mtrx[0] if mtrx else None
+        #
+        #
+        try:
+            val_in_mtrx = list(map(lambda x: 1 if val in x else 0, matrix))
+            row = val_in_mtrx.index(1)
+            col = matrix[row].index(val)                
+        except ValueError as e:
+            row = None
+            col = None
+
+        return (row,col) if row is not None or col is not None else None
+
 class TestSortedMatrix(unittest.TestCase):
 
     def test_find_val(self):
