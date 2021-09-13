@@ -1,5 +1,30 @@
+"""
+これで良いのか？？？
+"""
 import unittest
 
+
+class SortedMatrix(object):
+
+    def find_val(self, matrix, val):
+        # TODO: Implement me
+        # pass
+
+        chkargs = [matrix is None, val is None]
+        if any(chkargs):
+            raise TypeError(f'SortedMatrix.find_val: arg error')
+
+
+        row = None
+        col = None
+        for i, mtrx in enumerate(matrix):
+            if val in mtrx:
+                col = mtrx.index(val)
+                row = i
+        if row != None and col != None:
+            return (row, col)
+        else:
+            return None
 
 class TestSortedMatrix(unittest.TestCase):
 
