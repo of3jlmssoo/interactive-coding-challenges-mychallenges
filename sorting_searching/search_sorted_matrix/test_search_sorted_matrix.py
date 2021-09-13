@@ -17,15 +17,16 @@ class SortedMatrix(object):
 
         row = None
         col = None
-        for i, mtrx in enumerate(matrix):
-            if val in mtrx:
-                col = mtrx.index(val)
-                row = i
-        if row != None and col != None:
-            return (row, col)
-        else:
-            return None
-
+        # for i, mtrx in enumerate(matrix):
+        #     if val in mtrx:
+        #         col = mtrx.index(val)
+        #         row = i
+        # if row != None and col != None:
+        #     return (row, col)
+        # else:
+        #     return None
+        mtrx = [(h, i.index(val)) for h, i in enumerate(matrix) if val in i]
+        return mtrx[0] if mtrx else None
 class TestSortedMatrix(unittest.TestCase):
 
     def test_find_val(self):
