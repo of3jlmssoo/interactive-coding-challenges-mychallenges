@@ -1,4 +1,32 @@
+"""
+https://ja.wikipedia.org/wiki/%E9%81%B8%E6%8A%9E%E3%82%BD%E3%83%BC%E3%83%88
+
+
+"""
 import unittest
+
+
+class SelectionSort(object):
+
+    def sort(self, data):
+        # TODO: Implement me (recursive)
+        # pass
+        if data is None:
+            raise TypeError(f'SelectionSort.sort: arg error')
+
+        print(f'{data=} {len(data)=}')
+
+        if len(data) == 1 or len(data) == 0:
+            return data
+
+        for i in range(0, len(data)):
+            min = i
+            for j in range(i + 1, len(data)):
+                if data[j] < data[min]:
+                    min = j
+            data[i], data[min] = data[min], data[i]
+
+        return data
 
 
 class TestSelectionSort(unittest.TestCase):
@@ -24,13 +52,13 @@ def main():
     test = TestSelectionSort()
     selection_sort = SelectionSort()
     test.test_selection_sort(selection_sort.sort)
-    try:
-        test.test_selection_sort(selection_sort.sort_recursive)
-        test.test_selection_sort(selection_sort.sor_iterative_alt)
-    except NameError:
-        # Alternate solutions are only defined
-        # in the solutions file
-        pass
+    # try:
+    #     test.test_selection_sort(selection_sort.sort_recursive)
+    #     test.test_selection_sort(selection_sort.sor_iterative_alt)
+    # except NameError:
+    #     # Alternate solutions are only defined
+    #     # in the solutions file
+    #     pass
 
 
 if __name__ == '__main__':
