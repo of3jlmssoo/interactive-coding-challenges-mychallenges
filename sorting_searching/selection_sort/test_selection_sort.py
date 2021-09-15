@@ -1,5 +1,7 @@
 """
+[参照]
 https://ja.wikipedia.org/wiki/%E9%81%B8%E6%8A%9E%E3%82%BD%E3%83%BC%E3%83%88
+
 
 
 """
@@ -14,9 +16,9 @@ class SelectionSort(object):
         if data is None:
             raise TypeError(f'SelectionSort.sort: arg error')
 
-        print(f'{data=} {len(data)=}')
+        # print(f'{data=} {len(data)=}')
 
-        if len(data) == 1 or len(data) == 0:
+        if len(data) <= 1:
             return data
 
         for i in range(0, len(data)):
@@ -27,6 +29,24 @@ class SelectionSort(object):
             data[i], data[min] = data[min], data[i]
 
         return data
+
+    def sort_recursive(self, data):
+        return self._sort_recursive(data, 0)
+
+    def _sort_recursive(self, data, idx):
+        if idx >= len(data):
+            # print(f'1) {data=} {idx=}')
+            return data
+
+        # print(f'2) {data=} {idx=}')
+
+        min = idx
+        for j in range(idx + 1, len(data)):
+            if data[j] < data[min]:
+                min = j
+        data[idx], data[min] = data[min], data[idx]
+
+        return self._sort_recursive(data, idx + 1)
 
 
 class TestSelectionSort(unittest.TestCase):
@@ -52,13 +72,13 @@ def main():
     test = TestSelectionSort()
     selection_sort = SelectionSort()
     test.test_selection_sort(selection_sort.sort)
-    # try:
-    #     test.test_selection_sort(selection_sort.sort_recursive)
-    #     test.test_selection_sort(selection_sort.sor_iterative_alt)
-    # except NameError:
-    #     # Alternate solutions are only defined
-    #     # in the solutions file
-    #     pass
+    try:
+        test.test_selection_sort(selection_sort.sort_recursive)
+        # test.test_selection_sort(selection_sort.sor_iterative_alt)
+    except NameError:
+        # Alternate solutions are only defined
+        # in the solutions file
+        pass
 
 
 if __name__ == '__main__':
