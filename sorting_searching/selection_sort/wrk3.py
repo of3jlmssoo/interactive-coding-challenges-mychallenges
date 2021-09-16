@@ -41,15 +41,32 @@ end for
 
 """
 data = [5, 1, 7, 2, 6, -3, 5, 7, -10]
-# data = [8, 4, 3, 7, 6, 5, 2, 1]
+data = [8, 4, 3, 7, 6, 5, 2, 1]
 
+
+# def swap_data(data, i):
+#     min = i
+#     for j in range(i + 1, len(data)):
+#         # if data[j] < data[min]:
+#         #     min = j
+#         min = j if data[j] < data[i] else i
+
+#     data[i], data[min] = data[min], data[i]
+#     print(data)
 
 def swap_data(data, i):
-    min = i
-    for j in range(i + 1, len(data)):
-        # if data[j] < data[min]:
-        #     min = j
-        min = j if data[j] < data[i] else i
+    # min = i
+    # for j in range(i + 1, len(data)):
+    #     # if data[j] < data[min]:
+    #     #     min = j
+    #     min = j if data[j] < data[i] else i
+
+    # mins = [j if data[j] < data[i] else i for j in range(i + 1, len(data))]
+    mins = [j for j in range(i + 1, len(data)) if data[j] < data[i]]
+    print(f'{mins=}')
+    min = mins[-1] if mins else i
+
+
 
     data[i], data[min] = data[min], data[i]
     print(data)

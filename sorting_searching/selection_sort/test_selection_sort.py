@@ -2,7 +2,7 @@
 [参照]
 https://ja.wikipedia.org/wiki/%E9%81%B8%E6%8A%9E%E3%82%BD%E3%83%BC%E3%83%88
 
-
+sor_iterative_altについてはdouble selection sortで代替
 
 """
 import unittest
@@ -28,6 +28,24 @@ class SelectionSort(object):
                     min = j
             data[i], data[min] = data[min], data[i]
 
+        return data
+
+    def sor_iterative_alt(self, data):
+        for i in range(0, len(data) // 2):
+            min = i
+            max = i
+            l = len(data) - 1 - i
+            for j in range(i + 1, len(data) - i):
+                if data[j] < data[min]:
+                    min = j
+                if data[j] > data[max]:
+                    max = j
+
+            if i == max and l == min:
+                data[i], data[l] = data[l], data[i]
+            else:
+                data[i], data[min] = data[min], data[i]
+                data[l], data[max] = data[max], data[l]
         return data
 
     def sort_recursive(self, data):
@@ -74,7 +92,7 @@ def main():
     test.test_selection_sort(selection_sort.sort)
     try:
         test.test_selection_sort(selection_sort.sort_recursive)
-        # test.test_selection_sort(selection_sort.sor_iterative_alt)
+        test.test_selection_sort(selection_sort.sor_iterative_alt)
     except NameError:
         # Alternate solutions are only defined
         # in the solutions file
