@@ -1,4 +1,41 @@
 import unittest
+from test_stack import Stack
+from test_linked_list import Node
+import sys
+
+
+class StackMin(Stack):
+
+    def __init__(self, top=None):
+        # TODO: Implement me
+        # pass
+        super().__init__(top)
+
+    def minimum(self):
+        # TODO: Implement me
+        # pass
+        if not self._start_node:
+            return sys.maxsize
+
+        data_lst = []
+
+        current_node = self._start_node
+        data_lst.append(current_node.data)
+        while current_node.link is not None:
+            current_node = current_node.link
+            data_lst.append(current_node.data)
+
+        return min(data_lst)
+
+    def push(self, data):
+        # TODO: Implement me
+        # pass
+        super().push(data)
+
+    def pop(self):
+        # TODO: Implement me
+        # pass
+        return super().pop()
 
 
 class TestStackMin(unittest.TestCase):
