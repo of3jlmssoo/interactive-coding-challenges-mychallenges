@@ -29,8 +29,9 @@ logger.disabled = True
 class Node(object):
 
     def __init__(self, data, next_node=None):
-        pass
+        # pass
         # TODO: Implement me
+        print(f'Node.__init__:{data=} inited')
         self.__data = data
         self.__link = next_node
 
