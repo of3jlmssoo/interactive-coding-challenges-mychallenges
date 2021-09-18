@@ -29,67 +29,67 @@ class Stack(object):
         # TODO: Implement me
         # pass
 
-        self.__start_node = top if top else None
+        self._start_node = top if top else None
 
     def push(self, data):
         # TODO: Implement me
         # pass
 
         next_node = None
-        if self.__start_node:
-            next_node = copy.deepcopy(self.__start_node)
-        self.__start_node = Node(data)
+        if self._start_node:
+            next_node = copy.deepcopy(self._start_node)
+        self._start_node = Node(data)
         if next_node:
-            self.__start_node.link = next_node
+            self._start_node.link = next_node
 
     def pop(self):
         # TODO: Implement me
         # pass
-        if not self.__start_node:
+        if not self._start_node:
             return None
 
-        logger.debug(f'pop() 1 {self.__start_node=} {self.__start_node.data=}')
-        result = self.__start_node.data
-        # if self.__start_node.link is not None:
-        #     self.__start_node = self.__start_node.link
+        logger.debug(f'pop() 1 {self._start_node=} {self._start_node.data=}')
+        result = self._start_node.data
+        # if self._start_node.link is not None:
+        #     self._start_node = self._start_node.link
         # else:
-        #     self.__start_node = None
-        self.__start_node = self.__start_node.link if self.__start_node.link is not None else None
+        #     self._start_node = None
+        self._start_node = self._start_node.link if self._start_node.link is not None else None
 
-        logger.debug(f'pop() 2 {self.__start_node=}')
+        logger.debug(f'pop() 2 {self._start_node=} {result=}')
         return result
 
     def peek(self):
         # TODO: Implement me
         # pass
-        # if not self.__start_node:
+        # if not self._start_node:
         #     return None
-        # return self.__start_node.data
-        return self.__start_node.data if self.__start_node else None
+        # return self._start_node.data
+        return self._start_node.data if self._start_node else None
 
     def is_empty(self):
         # TODO: Implement me
         # pass
-        return False if self.__start_node else True
+        return False if self._start_node else True
 
     def list_nodes(self):
-        if not self.__start_node:
+        if not self._start_node:
             return
 
-        current_node = self.__start_node
+        current_node = self._start_node
         print(f'{current_node.data=}')
         while current_node.link is not None:
             current_node = current_node.link
             print(f'{current_node.data=}')
 
     # def list_nodes2(self):
-    #     # if self.__start_node:
-    #     #     current_node = self.__start_node
+    #     # if self._start_node:
+    #     #     current_node = self._start_node
     #     # else:
     #     #     return
-    #     if not self.__start_node:
+    #     if not self._start_node:
     #         return
-    #     current_node = self.__start_node
+    #     current_node = self._start_node
     #     while current_node.link is not None:
     #         print(f'{current_node.data=}')
     #         current_node = current_node.link
