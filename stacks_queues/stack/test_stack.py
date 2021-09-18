@@ -1,6 +1,20 @@
 import unittest
 import copy
 from test_linked_list import Node
+import logging
+
+
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler()
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+logger.propagate = False
+# DEBUG INFO WARNIG ERROR CRTICAL
+logger.setLevel(logging.DEBUG)
+ch.setLevel(logging.DEBUG)
+logger.disabled = True
 
 # class Node(object):
 
@@ -34,22 +48,24 @@ class Stack(object):
         if not self.__start_node:
             return None
 
-        print(f'pop() 1 {self.__start_node=} {self.__start_node.data=}')
-        if self.__start_node.link is not None:
-            result = self.__start_node.data
-            self.__start_node = self.__start_node.link
-        else:
-            result = self.__start_node.data
-            self.__start_node = None
-        print(f'pop() 2 {self.__start_node=}')
+        logger.debug(f'pop() 1 {self.__start_node=} {self.__start_node.data=}')
+        result = self.__start_node.data
+        # if self.__start_node.link is not None:
+        #     self.__start_node = self.__start_node.link
+        # else:
+        #     self.__start_node = None
+        self.__start_node = self.__start_node.link if self.__start_node.link is not None else None
+
+        logger.debug(f'pop() 2 {self.__start_node=}')
         return result
 
     def peek(self):
         # TODO: Implement me
         # pass
-        if not self.__start_node:
-            return None
-        return self.__start_node.data
+        # if not self.__start_node:
+        #     return None
+        # return self.__start_node.data
+        return self.__start_node.data if self.__start_node else None
 
     def is_empty(self):
         # TODO: Implement me
@@ -57,15 +73,27 @@ class Stack(object):
         return False if self.__start_node else True
 
     def list_nodes(self):
-        if self.__start_node:
-            current_node = self.__start_node
-        else:
-            print(f'list_nodes(): else')
+        if not self.__start_node:
             return
-        while current_node.link is not None:
-            print(f'{current_node.data=}')
-            current_node = current_node.link
+
+        current_node = self.__start_node
         print(f'{current_node.data=}')
+        while current_node.link is not None:
+            current_node = current_node.link
+            print(f'{current_node.data=}')
+
+    # def list_nodes2(self):
+    #     # if self.__start_node:
+    #     #     current_node = self.__start_node
+    #     # else:
+    #     #     return
+    #     if not self.__start_node:
+    #         return
+    #     current_node = self.__start_node
+    #     while current_node.link is not None:
+    #         print(f'{current_node.data=}')
+    #         current_node = current_node.link
+    #     print(f'{current_node.data=}')
 
 
 class TestStack(unittest.TestCase):

@@ -31,7 +31,7 @@ class Node(object):
     def __init__(self, data, next_node=None):
         # pass
         # TODO: Implement me
-        print(f'Node.__init__:{data=} inited')
+        # print(f'Node.__init__:{data=} inited')
         self.__data = data
         self.__link = next_node
 
