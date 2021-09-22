@@ -1,6 +1,60 @@
 import unittest
 
 
+class Stacks(object):
+
+    def __init__(self, num_stacks, stack_size):
+        # TODO: Implement me
+        # pass
+
+        argchks = [num_stacks <= 0, stack_size <= 0]
+        if any(argchks):
+            raise ValueError(f'Stacks.__init__: arg error')
+
+        self._num_stacks = num_stacks
+        self._stack_size = stack_size
+
+        self._lst = [None] * self._num_stacks * self._stack_size
+
+    def abs_index(self, stack_index):
+        # TODO: Implement me
+        pass
+
+    def set_start_end(self, idx):
+        start = idx * self._stack_size
+        return start, start + self._stack_size - 1
+
+    def push(self, stack_index, data):
+        # TODO: Implement me
+        # pass
+        start, end = self.set_start_end(stack_index)
+        if self._lst[end] is not None:
+            # print(f'Stacks.push: stack full')
+            raise Exception(f'Stacks.push: stack full')
+            # return
+
+        for x in reversed(range(start, end + 1)):
+            self._lst[x] = self._lst[x - 1]
+
+        self._lst[start] = data
+
+    def pop(self, stack_index):
+        # TODO: Implement me
+        # pass
+        start, end = self.set_start_end(stack_index)
+        if self._lst[start] is None:
+            raise Exception('Stacks.pop: emty stack')
+            # return
+
+        result = self._lst[start]
+
+        for x in range(start, end):
+            self._lst[x] = self._lst[x + 1]
+        self._lst[end] = None
+        # print(f'pop() will return {result}')
+        return result
+
+
 class TestStacks(unittest.TestCase):
 
     def test_pop_on_empty(self, num_stacks, stack_size):
