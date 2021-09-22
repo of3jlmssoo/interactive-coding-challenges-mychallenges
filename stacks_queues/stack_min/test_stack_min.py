@@ -1,7 +1,9 @@
-import unittest
-from test_stack import Stack
-from test_linked_list import Node
 import sys
+import unittest
+
+from test_linked_list import Node
+
+from test_stack import Stack
 
 
 class StackMin(Stack):
